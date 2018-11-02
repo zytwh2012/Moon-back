@@ -1,0 +1,16 @@
+
+<div style="text-align:center">
+  <mat-toolbar layout="row" layout-margin>
+    <a classs = "navigation" href="/">ShareForm</a>
+    <a classs = "navigation"  href="/Game">Game</a>
+    <a classs = "navigation"  href="/Animate">Animate</a>
+    <a classs = "navigation"  href="/Novel">Novel</a>
+  </mat-toolbar>
+</div>
+<div style="text-align:center">
+  <mat-nav-list>
+    <a mat-list-item href="..." *ngFor="let link of links"> {{ link }} </a>
+  </mat-nav-list>
+</div>
+
+<router-outlet></router-outlet>
