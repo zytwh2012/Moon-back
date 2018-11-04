@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { PostComponent } from './post/post.component';
+import { LoginComponent } from './login/login.component';
+
 
 @Component({
   selector: 'app-root',
@@ -8,5 +10,4 @@ import { PostComponent } from './post/post.component';
 })
 export class AppComponent {
   title = 'shareForum';
-
 }
