@@ -8,11 +8,12 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class PostService {
-  private _post_url:string =  "/asserts/post.json"
+  private _post_url:string =  "/assets//post.json"
 
   constructor(private http:HttpClient) { }
 
   getPost():Observable<IPost[]>{
     return this.http.get<IPost[]>(this._post_url)
   }
+
 }
