@@ -1,4 +1,14 @@
 /* floating-labels from boostrap */
+a.kinda-link:hover { 
+  cursor: pointer;
+  text-decoration: underline;
+  color: blue;
+}
+a.kinda-link { 
+  cursor: pointer;
+  text-decoration: underline;
+  color: lightblue;
+}
 
 :root {
     --input-padding-x: .75rem;
@@ -32,6 +42,8 @@
     margin-bottom: 1rem;
   }
   
+
+
   .form-label-group > input,
   .form-label-group > label {
     padding: var(--input-padding-y) var(--input-padding-x);

@@ -9,6 +9,7 @@ import { MatIconModule,} from '@angular/material';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import { PostComponent } from './post/post.component';
 import { LoginComponent } from './login/login.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { LoginComponent } from './login/login.component';
     BrowserAnimationsModule,
     MatIconModule,
     MatToolbarModule,
-    NgbModule.forRoot()
+    NgbModule.forRoot(),
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
