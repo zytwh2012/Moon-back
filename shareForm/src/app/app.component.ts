@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { PostComponent } from './post/post.component';
 import { LoginComponent } from './login/login.component';
 
 
@@ -8,5 +9,5 @@ import { LoginComponent } from './login/login.component';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'shareForm';
+  title = 'shareForum';
 }
