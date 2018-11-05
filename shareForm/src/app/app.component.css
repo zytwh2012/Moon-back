@@ -1,4 +1,14 @@
-navigation {
-    padding: 100px;
-    margin: 100px;
+mat-toolbar.headbar a {
+    margin-right: 8px;
+    color: white;
+}
+
+mat-toolbar.headbar  a:hover {
+  color: white;
+  text-decoration: none;
+}
+
+mat-toolbar.headbar  a:active {
+  color: white;
+  text-decoration: none;
 }

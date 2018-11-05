@@ -1,11 +1,14 @@
 
-<div style="text-align:center">
-  <mat-toolbar layout="row" layout-margin>
-    <a classs = "navigation" href="/">ShareForm</a>
-    <a classs = "navigation"  href="/Game">Game</a>
-    <a classs = "navigation"  href="/Animate">Animate</a>
-    <a classs = "navigation"  href="/Novel">Novel</a>
-  </mat-toolbar>
-</div>
+
+<mat-toolbar class='headbar' color='primary'>
+  <a mat-button routerLink="/" >ShareForum</a>
+  <a mat-button routerLink="/Game" >Game </a>
+  <a mat-button routerLink="/Animate" >Animate </a>
+  <a mat-button routerLink="/Novel" > Novel </a>
+</mat-toolbar>
 
 <router-outlet></router-outlet>
+
+<div id="animate_girl_picture">
+  <span><img src="./../assets/img/main/animation_girl_dancing.gif" ></span>
+</div>
