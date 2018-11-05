@@ -15,6 +15,7 @@ import { MatIconModule} from '@angular/material';
 import { MatToolbarModule} from '@angular/material/toolbar';
 import { PostService } from './post/post.service';
 import { HttpClientModule } from '@angular/common/http';
+import { MyMaterialModule } from './app.mymaterial';
 
 
 @NgModule({
@@ -33,7 +34,8 @@ import { HttpClientModule } from '@angular/common/http';
     MatListModule,
     MatToolbarModule,
     NgbModule.forRoot(),
-    FormsModule
+    FormsModule,
+    MyMaterialModule
   ],
   providers: [PostService],
   bootstrap: [AppComponent]

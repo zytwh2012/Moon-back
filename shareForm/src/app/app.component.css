@@ -1,6 +1,14 @@
+mat-toolbar.headbar a {
+    margin-right: 8px;
+    color: white;
+}
 
+mat-toolbar.headbar  a:hover {
+  color: white;
+  text-decoration: none;
+}
 
-.nivagation a {
-    margin-right: 20px;
-  }
-
+mat-toolbar.headbar  a:active {
+  color: white;
+  text-decoration: none;
+}
