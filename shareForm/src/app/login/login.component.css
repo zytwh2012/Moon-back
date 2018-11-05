@@ -1,14 +1,15 @@
 /* floating-labels from boostrap */
-a.kinda-link:hover { 
+/* a.kinda-link:hover { 
   cursor: pointer;
   text-decoration: underline;
-  color: blue;
+  color: darkblue;
 }
 a.kinda-link { 
   cursor: pointer;
   text-decoration: underline;
-  color: lightblue;
+  color: dodgerblue; 
 }
+ */
 
 :root {
     --input-padding-x: .75rem;

@@ -11,11 +11,10 @@ import { FormsModule } from '@angular/forms';
 
 import { MatListModule} from '@angular/material/list';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatIconModule,} from '@angular/material';
+import { MatIconModule} from '@angular/material';
 import { MatToolbarModule} from '@angular/material/toolbar';
 import { PostService } from './post/post.service';
 import { HttpClientModule } from '@angular/common/http';
-
 
 
 @NgModule({

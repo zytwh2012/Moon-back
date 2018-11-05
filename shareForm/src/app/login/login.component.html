@@ -21,10 +21,10 @@
       </label>
     </div>
 
-    <button (click)="signInUpSubmit()" class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
 
     <div>
-      <a href="#">Sign up</a> or <a href="#">Forget the password?</a>
+      <a routerLink="/signup" >Sign up</a> or <a routerLink="/" >Forget the password?</a>
     </div>
     
   </form>
@@ -33,7 +33,7 @@
 
 <div *ngIf="is_login_hidden" class="text-center" id='signup'>
   <form class="form-signin " ngNativeValidate>
-    <img class="mb-4" src="../../assets/img/login/login_icon.png" alt="" width="72" height="72">
+    <img class="mb-4" src="../../assets/img/login/signup_icon.png" alt="" width="72" height="72">
     <h1 class="h3 mb-3 font-weight-normal">Please sign up</h1>
 
     <label for="inputUsername" class="sr-only">Username</label>
@@ -51,8 +51,11 @@
     </div>
 
     <button class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>
+    <!-- <div>
+      <a (click)="signInUpSubmit()" class='kinda-link'>already have an account</a>
+    </div> -->
     <div>
-      <a class='kinda-link'>already have an account</a>
+      <a routerLink="/login">already have an account</a>
     </div>
     
   </form>
