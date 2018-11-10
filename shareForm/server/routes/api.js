@@ -13,14 +13,17 @@ mongoose.connect(db, { useNewUrlParser: true },error =>{
     }
 })
 
-router.get('/', (req, res) =>{
-    res.send('From API route')
-})
+// router.get('/', (req, res) =>{
+//     res.send('From API route')
+// })
+
 
 router.post('/register', (req, res) =>{
-    let userData = req.body
-    let user = new User(userData)
-    user.save(error,regesitedUser =>{
+
+    let userData = req.body;
+    let user = new User(userData);
+   
+    user.save((error,regesitedUser) =>{
         if(error){
             console.log(error)
         }else{
