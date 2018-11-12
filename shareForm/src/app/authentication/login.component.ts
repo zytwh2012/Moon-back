@@ -29,9 +29,11 @@ export class LoginComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    console.log('dad');
     // jquery to avoid user typing space to username
     $('#inputUsername').on({
       keydown: function(e) {
+        console.log('dad22');
         if (e.which === 32) {
           return false;
         }
