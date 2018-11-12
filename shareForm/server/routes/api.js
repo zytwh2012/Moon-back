@@ -39,10 +39,10 @@ router.post('/login', (req, res) => {
         console.log(err)    
       } else {
         if (!user) {
-          res.status(401).send('Invalid Email or Password')
+          res.status(401).send('Invalid Email or Password1')
         } else 
         if ( user.password !== userData.password) {
-          res.status(401).send('Invalid Email or  Password')
+          res.status(401).send('Invalid Email or  Password2')
         } else {
           res.status(200).send(user)
         }

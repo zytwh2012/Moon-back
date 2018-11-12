@@ -17,6 +17,7 @@ import { PostService } from './post/post.service';
 import { HttpClientModule } from '@angular/common/http';
 import { MyMaterialModule } from './app.mymaterial';
 import { RegistrareService} from './authentication/registrate.service';
+import { LoginService } from './authentication/login.service';
 
 
 @NgModule({
@@ -38,7 +39,7 @@ import { RegistrareService} from './authentication/registrate.service';
     FormsModule,
     MyMaterialModule
   ],
-  providers: [PostService, RegistrareService],
+  providers: [PostService, RegistrareService, LoginService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

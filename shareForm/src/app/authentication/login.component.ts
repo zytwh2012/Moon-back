@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { RegistrareService } from './registrate.service';
+import { LoginService } from './login.service';
 
 @Component({
   selector: 'app-login',
@@ -10,10 +11,11 @@ import { RegistrareService } from './registrate.service';
 })
 
 export class LoginComponent implements OnInit {
+  loginInRequestData = {};
   signUpRequestData = {};
   private is_login_hidden = false ;
 
-  constructor(private router: Router, private location: Location, private _reg: RegistrareService) { }
+  constructor(private router: Router, private location: Location, private _reg: RegistrareService, private _log: LoginService) { }
   ngOnInit() {
     if (this.location.isCurrentPathEqualTo('/login')) {
       this.is_login_hidden = false ;
@@ -25,6 +27,14 @@ export class LoginComponent implements OnInit {
     }
   }
 
+  logIn() {
+    console.log(this.loginInRequestData),
+    this._log.loginInRequest(this.loginInRequestData)
+      .subscribe(
+      res => console.log(res),
+      error => console.log(error)
+    );
+  }
   singUp() {
     this._reg.signUpRequest(this.signUpRequestData)
       .subscribe(
@@ -32,5 +42,4 @@ export class LoginComponent implements OnInit {
         error => console.log(error)
       );
   }
-
 }

@@ -6,12 +6,12 @@
 
 
     <label for="inputUsername" class="sr-only">Username</label>
-    <input (ngModel)='username' [ngModelOptions] = '{standalone:true}'
-          type="text" id="inputUsername" class="form-control" placeholder="Username" required autofocus/>
+    <input [(ngModel)]='loginInRequestData.email' [ngModelOptions] = '{standalone:true}' name = 'email'
+          type="email" id="inputUsername" class="form-control" placeholder="Username" required autofocus/>
 
 
     <label for="inputPassword" class="sr-only">Password</label>
-    <input (ngModel)='password' [ngModelOptions] = '{standalone:true}'
+    <input [(ngModel)]='loginInRequestData.password' [ngModelOptions] = '{standalone:true}'
           type="password" id="inputPassword" class="form-control" placeholder="Password" required/> 
 
     
@@ -21,7 +21,7 @@
       </label>
     </div>
 
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+    <button (click) = 'logIn()' class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
 
     <div>
       <a routerLink="/signup" >Sign up</a> or <a routerLink="/" >Forget the password?</a>
