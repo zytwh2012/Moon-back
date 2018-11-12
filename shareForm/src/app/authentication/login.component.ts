@@ -28,12 +28,10 @@ export class LoginComponent implements OnInit, AfterViewInit {
     }
   }
 
-  ngAfterViewInit(): void {
-    console.log('dad');
+  ngAfterViewInit() {
     // jquery to avoid user typing space to username
     $('#inputUsername').on({
       keydown: function(e) {
-        console.log('dad22');
         if (e.which === 32) {
           return false;
         }
@@ -47,25 +45,21 @@ export class LoginComponent implements OnInit, AfterViewInit {
   logIn() {
     console.log(this.loginInRequestData);
 
-    if (this.signUpRequestData.email && this.signUpRequestData.password) {
-      this._log.loginInRequest(this.loginInRequestData)
-      .subscribe(
-      res => console.log(res),
-      error => console.log(error)
-      );
-      this.router.navigate(['/']);
-    }
+    this._log.loginInRequest(this.loginInRequestData)
+    .subscribe(
+    res => console.log(res),
+    error => console.log(error)
+    );
+    this.router.navigate(['/']);
   }
 
   singUp() {
-    if (this.signUpRequestData.email && this.signUpRequestData.password) {
-      this._reg.signUpRequest(this.signUpRequestData)
-        .subscribe(
-          res => console.log(res),
-          error => console.log(error)
-        );
-        this.is_login_hidden = false;
-      }
-  }
+    this._reg.signUpRequest(this.signUpRequestData)
+      .subscribe(
+        res => console.log(res),
+        error => console.log(error)
+      );
+      this.is_login_hidden = false;
+    }
 
 }
