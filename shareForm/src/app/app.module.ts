@@ -6,7 +6,7 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app.component';
 import { PostComponent } from './post/post.component';
-import { LoginComponent } from './login/login.component';
+import { LoginComponent } from './authentication/login.component';
 import { FormsModule } from '@angular/forms';
 
 import { MatListModule} from '@angular/material/list';
@@ -16,6 +16,8 @@ import { MatToolbarModule} from '@angular/material/toolbar';
 import { PostService } from './post/post.service';
 import { HttpClientModule } from '@angular/common/http';
 import { MyMaterialModule } from './app.mymaterial';
+import { RegistrareService} from './authentication/registrate.service';
+import { LoginService } from './authentication/login.service';
 
 
 @NgModule({
@@ -37,7 +39,7 @@ import { MyMaterialModule } from './app.mymaterial';
     FormsModule,
     MyMaterialModule
   ],
-  providers: [PostService],
+  providers: [PostService, RegistrareService, LoginService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
