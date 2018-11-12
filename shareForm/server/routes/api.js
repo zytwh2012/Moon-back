@@ -31,4 +31,24 @@ router.post('/register', (req, res) =>{
         }
     })
 })
+
+router.post('/login', (req, res) => {
+    let userData = req.body
+    User.findOne({email: userData.email}, (err, user) => {
+      if (err) {
+        console.log(err)    
+      } else {
+        if (!user) {
+          res.status(401).send('Invalid Email or Password')
+        } else 
+        if ( user.password !== userData.password) {
+          res.status(401).send('Invalid Email or  Password')
+        } else {
+          res.status(200).send(user)
+        }
+      }
+    })
+  })
+  
+
 module.exports = router
