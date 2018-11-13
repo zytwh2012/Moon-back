@@ -62,8 +62,8 @@ router.post('/login', (req, res) => {
 })
 
 // main page feed
-router.post('/feed', (req, res) =>{
-    let pullRequest = req.body;
+router.get('/feed', (req, res) =>{
+    // let pullRequest = req.body;
 
     Post.find()
         .sort({'last_edited': -1})
