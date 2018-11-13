@@ -36,11 +36,11 @@
     <img class="mb-4" src="../../assets/img/login/signup_icon.png" alt="" width="72" height="72">
     <h1 class="h3 mb-3 font-weight-normal">Please sign up</h1>
 
-    <label for="signUpRequestData.inputUsername" class="sr-only">Username</label>
+    <label for="inputUsername" class="sr-only">Username</label>
     <input [(ngModel)]='signUpRequestData.email' [ngModelOptions] = '{standalone:true}' name = 'email'
           type="email" id="inputUsername" class="form-control" placeholder="Username" required autofocus/>
 
-    <label for="signUpRequestData.inputPassword" class="sr-only">Password</label>
+    <label for="inputPassword" class="sr-only">Password</label>
     <input [(ngModel)]='signUpRequestData.password' [ngModelOptions] = '{standalone:true}'
           type="password" id="inputPassword" class="form-control" placeholder="Password" required/> 
 

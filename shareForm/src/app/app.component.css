@@ -1,14 +1,34 @@
 mat-toolbar.headbar a {
-    margin-right: 8px;
-    color: white;
+  margin-right: 8px;
+  color: white;
 }
 
 mat-toolbar.headbar  a:hover {
-  color: white;
-  text-decoration: none;
+color: white;
+text-decoration: none;
 }
 
 mat-toolbar.headbar  a:active {
-  color: white;
-  text-decoration: none;
+color: white;
+text-decoration: none;
+}
+
+.imgcorner {
+margin: 0px 5px 0px 5px;
+background-color: white;
+}
+.bottomleft {
+position: fixed;
+left : 0px;
+bottom: 0px; 
+}
+.bottomright {
+position: fixed;
+right : 0px;
+bottom: 0px;
+}
+
+.imgcorner, .imgsize {
+width:200px;
+height:200px;
 }
