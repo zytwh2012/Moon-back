@@ -3,13 +3,13 @@ var Schema = mongoose.Schema;
 
 var postSchema = new Schema({
   id: Number,
-  post_owner_id: Number,
+  postOwner_id: Number,
   parent_post: Number,
   child_post: Number,
-  post_content: String,
+  postContent: String,
   title: String,
   branch: String,
-  last_edited: Date
+  lastEdited: Date
 
 });
 

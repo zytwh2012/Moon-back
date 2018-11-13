@@ -61,36 +61,38 @@ router.post('/login', (req, res) => {
     })
 })
 
-// // main page feed
-// router.post('/feed', (req, res) =>{
+// main page feed
+router.post('/feed', (req, res) =>{
+    let pullRequest = req.body;
 
-//     let pullRequest = req.body;
+    Post.find()
+        .sort({'last_edited': -1})
+        .limit(2)
+        .exec((error, post) => {
+        if (error) {
+          console.log(err)    
+        }else {
+        }res.status(200).send(post)
+    })
+})
 
-//     Post.find()
-//         .sort({'last_edited': -1})
-//         .limit(10)
-//         .exec((err, user) => {
-//         if (err) {
-//           console.log(err)    
-//         } else {
+// branch feed
+router.post('/branch_feed', (req, res) =>{
+    let pullRequest = req.body;
+    let branchReq = pullRequest.branch;
 
-//         }
+    Post.find({branch: branchReq})
+        .sort({'last_edited': -1})
+        .limit(2)
+        .exec((error, post) => {
+        if (error) {
+          console.log(err)    
+        }else {
+        }res.status(200).send(post)
+    })
+})
 
-//     })
-
-// // branch feed
-// router.post('/branch_feed', (req, res) =>{
-
-//     let pullRequest = req.body;
-//     Post.find({email: userData.email}, (err, user) => {
-//         if (err) {
-//           console.log(err)    
-//         } else {
-
-//         }
-
-//     })
-
+// search
 // router.post('/pull', (req, res) =>{
 
 //     let userData = req.body;
