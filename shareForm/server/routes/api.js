@@ -61,35 +61,36 @@ router.post('/login', (req, res) => {
     })
 })
 
-// main page feed
-router.get('/feed', (req, res) =>{
-    // let pullRequest = req.body;
 
-    Post.find()
-        .sort({'last_edited': -1})
-        .limit(2)
-        .exec((error, post) => {
-        if (error) {
-          console.log(err)    
-        }else {
-        }res.status(200).send(post)
-    })
-})
-
-// branch feed
-router.post('/branch_feed', (req, res) =>{
+// feed
+router.post('/feed', (req, res) =>{
     let pullRequest = req.body;
     let branchReq = pullRequest.branch;
+    let count = pullRequest.count;
 
-    Post.find({branch: branchReq})
-        .sort({'last_edited': -1})
-        .limit(2)
-        .exec((error, post) => {
-        if (error) {
-          console.log(err)    
-        }else {
-        }res.status(200).send(post)
-    })
+    if (branchReq == ''){
+        Post.find()
+            .sort({'last_edited': -1})
+            .limit(10)
+            .skip(count)
+            .exec((error, post) => {
+                if (error) {
+                console.log(err)    
+                }else {
+                }res.status(200).send(post)
+            });
+    }else{
+        Post.find({branch: branchReq})
+            .sort({'last_edited': -1})
+            .limit(10)
+            .skip(count)
+            .exec((error, post) => {
+                if (error) {
+                console.log(err)    
+                }else {
+                }res.status(200).send(post)
+            });
+    }
 })
 
 // search
