@@ -6,6 +6,9 @@ import { PostComponent } from './post/post.component';
 const routes: Routes = [
   { path: 'login', component: LoginComponent},
   { path: 'signup', component: LoginComponent},
+  { path: 'animate', component: PostComponent},
+  { path: 'game', component: PostComponent},
+  { path: 'novel', component: PostComponent},
   { path: '', component: PostComponent}
 ];
 
