@@ -1,15 +1,30 @@
 
 
-<mat-toolbar class='headbar' color='primary'>
-  <a mat-button routerLink="/" >ShareForum</a>
-  <a mat-button routerLink="/Game" >Game </a>
-  <a mat-button routerLink="/Animate" >Animate </a>
-  <a mat-button routerLink="/Novel" > Novel </a>
-</mat-toolbar>
 
-<router-outlet></router-outlet>
+<div class="header_container">
+  <div class="header">
+    there is title
+  </div>
 
-<div>
-  <img class='imgsize bottomleft' src="./../assets/img/main/animation_girl_dancing.gif" >
-  <img class='imgsize bottomright' src="./../assets/img/main/animation_girl_dancing.gif" >
+  <mat-toolbar  class='header_nav' color='primary'>
+    <a mat-button routerLink="/" >ShareForum</a>
+    <a mat-button routerLink="/Game" >Game </a>
+    <a mat-button routerLink="/Animate" >Animate </a>
+    <a mat-button routerLink="/Novel" > Novel </a>
+  </mat-toolbar>
+
+  <div class="header_pic">
+    <img class='imgbgsize'  src="./../assets/img/main/headerbg.jpg" > 
+  </div>
+  
+  <div class="main">
+    <router-outlet ></router-outlet>
+  </div>
+
+  <div class="sub_bottom"> 
+      <img class='imgsize' align="left"  src="./../assets/img/main/animation_girl_dancing_left.gif" > 
+      <img class='imgsize' align="right" src="./../assets/img/main/animation_girl_dancing_right.gif"> 
+  </div>
+
 </div>
+

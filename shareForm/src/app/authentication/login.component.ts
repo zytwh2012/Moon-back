@@ -40,6 +40,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
         this.value = this.value.replace(/\s/g, '');
       }
     });
+
   }
 
   logIn() {
