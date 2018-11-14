@@ -13,22 +13,47 @@ color: white;
 text-decoration: none;
 }
 
-.imgcorner {
-margin: 0px 5px 0px 5px;
-background-color: white;
-}
-.bottomleft {
-position: fixed;
-left : 0px;
-bottom: 0px; 
-}
-.bottomright {
-position: fixed;
-right : 0px;
-bottom: 0px;
+.imgsize {
+max-width: 100%;
+width :auto;
+height:100%;
 }
 
-.imgcorner, .imgsize {
-width:200px;
-height:200px;
+.imgbgsize{
+width :100%;
+height:auto;
+}
+
+
+
+/* header grid view */
+
+.header{
+  grid-area: 1 /  2/ 2/ 4;
+}
+
+.header_pic{
+  grid-area: 2 / 2/ 3 / 4;
+
+}
+
+.header_nav{
+  grid-area: 3/ 2/ 4 / 4;
+
+}
+.main{
+  grid-area: 4 / 2/ 5 / 4;
+
+}
+.sub_bottom{
+  grid-area: 5 / 1/ 6/ 5;
+  height: 50px;
+
+}
+.header_container {
+  display: grid  ;
+  grid-template-columns: 1fr 7fr 3fr 1fr ; 
+  grid-template-rows: auto auto auto auto auto;
+
+  
 }
