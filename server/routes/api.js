@@ -17,8 +17,9 @@ mongoose.connect(db, { useNewUrlParser: true },error =>{
 
 function verifyToken(req, res, next) {
     // verify the Json Token 
+    console.log(req.headers.authorization,"req.headers.authorization")
     if(!req.headers.authorization) {
-      return res.status(401).send('Unauthorized request')
+      return res.status(40).send('Unauthorized request')
     }
     let token = req.headers.authorization.split(' ')[1]
     if(token === 'null') {
@@ -70,7 +71,8 @@ router.post('/login', (req, res) => {
   })
 
   // post
-  router.post('/post', (req, res) =>{
+  router.post('/post', verifyToken, (req, res) =>{
+    console.log('test')
     let postData = req.body;
     let post = new Post(postData);
    
@@ -85,7 +87,7 @@ router.post('/login', (req, res) => {
 
 
 // feed
-router.post('/feed', (req, res) =>{
+router.post('/feed', verifyToken, (req, res) =>{
     let pullRequest = req.body;
     let branchReq = pullRequest.branch;
     let count = pullRequest.count;
