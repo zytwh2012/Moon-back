@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { map } from 'rxjs/operators';
+
+
+
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +15,15 @@ export class LoginService {
   constructor(private http: HttpClient) { }
 
   loginInRequest(user) {
-    return this.http.post<any>(this._registerUrl, user);
+    return this.http.post<any>(this._registerUrl, user)
+            .pipe( map(
+              auser => {
+              if ( auser ) {
+                delete auser['password'];
+                console.log(auser);
+                localStorage.setItem('email', auser['email']);
+                return auser;
+              }
+            }));
   }
 }

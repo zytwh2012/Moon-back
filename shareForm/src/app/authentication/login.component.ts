@@ -18,13 +18,20 @@ export class LoginComponent implements OnInit, AfterViewInit {
 
   constructor(private router: Router, private location: Location, private _reg: RegistrareService, private _log: LoginService) { }
   ngOnInit() {
-    if (this.location.isCurrentPathEqualTo('/login')) {
-      this.is_login_hidden = false ;
-    } else if (this.location.isCurrentPathEqualTo('/signup')) {
-      this.is_login_hidden = true ;
+    const user_id = localStorage.getItem('token');
+    
+    if (user_id) {
+      console.log(user_id);
+      this.router.navigate(['/']);
     } else {
-      console.log('error login unknown url', this.router.url );
-      this.is_login_hidden = false ;
+      if (this.location.isCurrentPathEqualTo('/login')) {
+        this.is_login_hidden = false ;
+      } else if (this.location.isCurrentPathEqualTo('/signup')) {
+        this.is_login_hidden = true ;
+      } else {
+        console.log('error login unknown url', this.router.url );
+        this.is_login_hidden = false ;
+      }
     }
   }
 
@@ -44,14 +51,18 @@ export class LoginComponent implements OnInit, AfterViewInit {
   }
 
   logIn() {
-    console.log(this.loginInRequestData);
-
     this._log.loginInRequest(this.loginInRequestData)
-    .subscribe(
-    res => console.log(res),
-    error => console.log(error)
-    );
-    this.router.navigate(['/']);
+      .subscribe(
+        // todo: return a json user, check user's active status
+        // is actived, save it to cookie and redirected to router
+        data => {
+          if (data) {
+            const user_id = localStorage.getItem('token');
+            this.router.navigate(['/']);
+          }
+        },
+        error => console.log(error, 'here error')
+      );
   }
 
   singUp() {
