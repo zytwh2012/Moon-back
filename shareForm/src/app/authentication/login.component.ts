@@ -72,10 +72,15 @@ export class LoginComponent implements OnInit, AfterViewInit {
   signUp() {
     this._reg.signUpRequest(this.signUpRequestData)
       .subscribe(
-        res => console.log(res),
-        error => console.log(error)
+        res => {
+          console.log(res);
+          this.is_login_hidden = false;
+        },
+        error => {
+          console.log(error);
+          this.is_login_hidden = true;
+        }
       );
-      this.is_login_hidden = false;
   }
 
 }
