@@ -17,9 +17,8 @@ mongoose.connect(db, { useNewUrlParser: true },error =>{
 
 function verifyToken(req, res, next) {
     // verify the Json Token 
-    console.log(req.headers.authorization,"req.headers.authorization")
     if(!req.headers.authorization) {
-      return res.status(40).send('Unauthorized request')
+      return res.status(401).send('Unauthorized request')
     }
     let token = req.headers.authorization.split(' ')[1]
     if(token === 'null') {
