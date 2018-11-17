@@ -13,6 +13,7 @@ color: white;
 text-decoration: none;
 }
 
+
 .imgsize {
 max-width: 100%;
 width :auto;
@@ -41,25 +42,41 @@ height:auto;
   grid-area: 3/ 2/ 4 / 4;
 
 }
-.main{
+.post_main{
   grid-area: 4 / 2/ 5 / 4;
 
 }
-.sub_bottom{
-  grid-area: 5 / 1/ 6/ 5;
-  height: 50px;
 
-}
+
+
 .header_container {
   display: grid  ;
-  grid-template-columns: 1fr 7fr 3fr 1fr ; 
+  grid-template-columns: 1fr 8fr 2fr 1fr ; 
   grid-template-rows: auto auto auto auto auto;
-
-  
 }
 
-div.sticky {
-  position: -webkit-sticky;
+
+
+
+@media screen  {
+  .sub_bottom{
+    height:10vh;
+    width: 100%;
+    grid-area: 5 / 1/ 6 / 5;
+  }
+
+  div.sticky_bot{
+    position: -webkit-sticky;
+    position: sticky;
+    bottom: 0vh;
+  }
+
+}
+
+.app-toolbar {
   position: sticky;
-  bottom: 0;
+  position: -webkit-sticky; /* For macOS/iOS Safari */
+  top: 0; /* Sets the sticky toolbar to be on top */
+  z-index: 1000; /* Ensure that your app's content doesn't overlap the toolbar */
 }
+

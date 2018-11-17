@@ -32,6 +32,10 @@ export class LoginComponent implements OnInit, AfterViewInit {
         this.is_login_hidden = false ;
       }
     }
+
+    // set fixed
+    const dancing_grils = document.getElementById('girls');
+    dancing_grils.style.position = 'fixed';
   }
 
   ngAfterViewInit() {
@@ -72,11 +76,6 @@ export class LoginComponent implements OnInit, AfterViewInit {
         error => console.log(error)
       );
       this.is_login_hidden = false;
-  }
-
-  signOut() {
-    localStorage.clear();
-    sessionStorage.clear();
   }
 
 }

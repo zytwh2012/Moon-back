@@ -19,12 +19,14 @@ import { MyMaterialModule } from './app.mymaterial';
 import { RegistrareService} from './authentication/registrate.service';
 import { LoginService } from './authentication/login.service';
 import { TokenService } from './authentication/token.service';
+import { LogoutComponent } from './authentication/logout.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     PostComponent,
-    LoginComponent
+    LoginComponent,
+    LogoutComponent
   ],
   imports: [
     BrowserModule,

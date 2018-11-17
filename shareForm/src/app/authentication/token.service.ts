@@ -1,6 +1,5 @@
 import { Injectable, Injector } from '@angular/core';
 import { HttpInterceptor } from '@angular/common/http';
-import { LoginService } from './login.service';
 
 
 @Injectable({

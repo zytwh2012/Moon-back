@@ -37,8 +37,8 @@ router.post('/register', (req, res) =>{
 
     let userData = req.body;
     let user = new User(userData);
-   
-    user.save((error,regesitedUser) =>{
+    
+    user.save((error,registeredUser) =>{
         if(error){
             console.log(error);
         }else{
