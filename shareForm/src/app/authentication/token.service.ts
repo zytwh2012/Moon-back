@@ -28,7 +28,7 @@ export class TokenService implements HttpInterceptor {
   }
 
   loggedIn() {
-    return !!localStorage.getItem('token') && !!sessionStorage.getItem('token');
+    return !!localStorage.getItem('token') || !!sessionStorage.getItem('token');
   }
 }
 

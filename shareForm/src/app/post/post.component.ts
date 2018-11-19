@@ -30,7 +30,6 @@ export class PostComponent implements OnInit , AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this._logedin = this._tokenService.loggedIn();
     window.onscroll = _ => {
       if ( this._is_pullable && ( window.scrollY + window.innerHeight) / document.body.scrollHeight >= 0.95) {
         this._postService.getPost(this._current_path, this.posts.length)
@@ -42,9 +41,16 @@ export class PostComponent implements OnInit , AfterViewInit {
             }
           });
       }
-      console.log(this._logedin);
     };
   }
+
+  logOut() {
+    localStorage.clear();
+    sessionStorage.clear();
+    this._router.navigate(['/']);
+  }
+
 }
+
 
 
