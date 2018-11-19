@@ -14,17 +14,19 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatIconModule} from '@angular/material';
 import { MatToolbarModule} from '@angular/material/toolbar';
 import { PostService } from './post/post.service';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { MyMaterialModule } from './app.mymaterial';
 import { RegistrareService} from './authentication/registrate.service';
 import { LoginService } from './authentication/login.service';
-
+import { TokenService } from './authentication/token.service';
+import { LogoutComponent } from './authentication/logout.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     PostComponent,
-    LoginComponent
+    LoginComponent,
+    LogoutComponent
   ],
   imports: [
     BrowserModule,
@@ -39,7 +41,12 @@ import { LoginService } from './authentication/login.service';
     FormsModule,
     MyMaterialModule
   ],
-  providers: [PostService, RegistrareService, LoginService],
+  providers: [PostService, RegistrareService, LoginService,
+    {
+    provide: HTTP_INTERCEPTORS,
+    useClass: TokenService,
+    multi: true},
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
