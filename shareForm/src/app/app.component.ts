@@ -12,7 +12,8 @@ export class AppComponent implements OnInit, AfterViewInit {
   title = 'shareForum';
 
   ngOnInit() {
-
+    const dancing_grils = document.getElementById('girls');
+    dancing_grils.style.position = 'fixed';
   }
 
   ngAfterViewInit() {
