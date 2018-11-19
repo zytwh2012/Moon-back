@@ -6,7 +6,6 @@ import { HttpInterceptor } from '@angular/common/http';
   providedIn: 'root'
 })
 export class TokenService implements HttpInterceptor {
-
   constructor(private injector: Injector) {}
   intercept(req, next) {
     const tokenizedReq = req.clone(
@@ -28,10 +27,9 @@ export class TokenService implements HttpInterceptor {
     }
   }
 
-
-  // loggedIn() {
-  //   return !!localStorage.getItem('token') && !!sessionStorage.getItem('token');
-  // }
+  loggedIn() {
+    return !!localStorage.getItem('token') && !!sessionStorage.getItem('token');
+  }
 }
 
 

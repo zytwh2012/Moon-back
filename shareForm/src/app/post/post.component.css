@@ -1,3 +1,27 @@
 .mat-nav-list a.active {
     background: blue;
 }
+
+.post {
+    grid-area: 1/1/ 2/2;
+  }
+
+.sidebar {
+    grid-area: 1/2/ 2/3;
+   
+  }
+
+.post_container {
+    display: grid  ;
+    grid-template-columns: 8fr 2fr; 
+    grid-template-rows: auto auto;
+  }
+
+.auth_card {
+ 
+    position: sticky;
+    position: -webkit-sticky; /* For macOS/iOS Safari */
+    top: 7%; 
+    z-index: 1000; /* Ensure that your app's content doesn't overlap the toolbar */
+    padding: 1%；
+}
