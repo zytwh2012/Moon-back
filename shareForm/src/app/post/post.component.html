@@ -1,6 +1,29 @@
 
-<div style="text-align:center">
-  <mat-nav-list>
-    <a mat-list-item href="/" *ngFor="let post of posts"> {{post.id}} {{post.title}} {{post.branch}}- {{post.post_content}} </a>
-  </mat-nav-list>
-</div> 
+
+<div class = 'post_container'>
+      <div class = "post"><mat-nav-list>
+        <a mat-list-item href="/" *ngFor="let post of posts"> {{post.id}} {{post.title}} {{post.branch}}- {{post.post_content}} </a>
+        </mat-nav-list></div>
+
+<div class = 'sidebar'>
+  <mat-card class = 'auth_card'>
+    <mat-card-header>
+        <mat-card-title>Share forum</mat-card-title>
+        <mat-card-subtitle *ngIf="!_logedin">Log in to find out more</mat-card-subtitle>
+        <mat-card-subtitle *ngIf="_logedin">Welcome {{_user_name}} </mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+        小撸怡情，大撸伤身，强撸灰飞烟灭.
+    </mat-card-content>
+
+    <mat-card-actions *ngIf="!_logedin"> 
+      <a mat-raised-button color = "accent" routerLink="/login" >Log in</a>
+      <a mat-raised-button color = "accent"  routerLink="/signup" >Sign up</a>
+    </mat-card-actions>
+
+    <mat-card-actions *ngIf="_logedin"> 
+        <a mat-raised-button color = "accent" routerLink="/logout" >Log out</a>
+    </mat-card-actions>
+
+  </mat-card></div></div>
+

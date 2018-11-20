@@ -30,7 +30,7 @@ height:auto;
 /* header grid view */
 
 .header{
-  grid-area: 1 /  2/ 2/ 4;
+  grid-area: 1/2/ 2/ 4;
 }
 
 .header_pic{
