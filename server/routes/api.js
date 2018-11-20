@@ -28,7 +28,20 @@ function verifyToken(req, res, next) {
     if(!payload) {
       return res.status(401).send('Unauthorized request')    
     }
-    req.userId = payload.subject
+
+    try {
+        const now = Date.now().valueOf() / 1000
+        if (typeof payload.exp !== 'undefined' && payload.exp < now) {
+            throw new Error(`token expired: ${JSON.stringify(token)}`)
+        }
+        if (typeof payload.nbf !== 'undefined' && payload.nbf > now) {
+            throw new Error(`token expired: ${JSON.stringify(token)}`)
+        } 
+    }catch (error) {
+        console.error(error)
+    }
+
+    req.userId = payload.userid
     next()
 }
 
@@ -42,9 +55,11 @@ router.post('/register', (req, res) =>{
         if(error){
             console.log(error);
         }else{
-            let payload = {subject: registeredUser._id};
+            let payload = {userid: registeredUser._id};
+
             let token = jwt.sign(payload, 'secretKey');
-            res.status(200).send({token});
+            
+            res.status(200).send({token,payload});
         }
     })
 })
@@ -61,9 +76,10 @@ router.post('/login', (req, res) => {
         if ( user.password !== userData.password) {
           res.status(401).send('Invalid Email or  Password')
         } else {
-            let payload = {subject: user._id}
+            let payload = {userid: user._id,
+                           exp: Math.floor(Date.now().valueOf() / 1000) + (60) }
             let token = jwt.sign(payload, 'secretKey')
-            res.status(200).send({token})
+            res.status(200).send({token,payload})
         }
       }
     })
