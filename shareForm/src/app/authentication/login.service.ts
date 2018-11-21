@@ -17,12 +17,9 @@ export class LoginService {
   loginInRequest(user) {
     return this.http.post<any>(this._registerUrl, user)
             .pipe( map(
-              auser => {
-              if ( auser ) {
-                delete auser['password'];
-                console.log(auser);
-                localStorage.setItem('email', auser['email']);
-                return auser;
+              res => {
+              if ( res.status === 'successful' ) {
+                return res.data;
               }
             }));
   }
