@@ -26,6 +26,13 @@ function verifyToken(req, res, next) {
     }
     try{
         let payload = jwt.verify(token, 'secretKey');
+        
+        if(!payload) {
+            return res.status(401).send('Unauthorized request');
+          }
+      
+        req.userId = payload.userid;
+        next();
     }catch(e) {
         // if the token expired 
         // return 401 
@@ -33,12 +40,6 @@ function verifyToken(req, res, next) {
             return res.status(401).send( e.name);
         }
     }
-    if(!payload) {
-      return res.status(401).send('Unauthorized request');
-    }
-
-    req.userId = payload.userid;
-    next();
 }
 
 
