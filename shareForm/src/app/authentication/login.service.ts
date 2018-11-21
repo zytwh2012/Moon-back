@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs/operators';
+import { map, catchError } from 'rxjs/operators';
+import { error } from '@angular/compiler/src/util';
 
 
 
@@ -15,15 +16,7 @@ export class LoginService {
   constructor(private http: HttpClient) { }
 
   loginInRequest(user) {
-    return this.http.post<any>(this._registerUrl, user)
-            .pipe( map(
-              auser => {
-              if ( auser ) {
-                delete auser['password'];
-                console.log(auser);
-                localStorage.setItem('email', auser['email']);
-                return auser;
-              }
-            }));
+    console.log('haotianzhu');
+    return this.http.post<any>(this._registerUrl, user);
   }
 }
