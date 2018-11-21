@@ -63,6 +63,7 @@ height:auto;
     height:10vh;
     width: 100%;
     grid-area: 5 / 1/ 6 / 5;
+    z-index: -1000;
   }
 
   div.sticky_bot{

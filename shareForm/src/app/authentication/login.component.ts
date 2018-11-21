@@ -61,7 +61,8 @@ export class LoginComponent implements OnInit, AfterViewInit {
         res => {
           if (res) {
             // if not 'remember me'
-            sessionStorage.setItem('token', res.token);
+            sessionStorage.setItem('accessToken', res.data.accessToken);
+            sessionStorage.setItem('refreshToken', res.data.refreshToken);
             this.router.navigate(['/']);
           }
         },
