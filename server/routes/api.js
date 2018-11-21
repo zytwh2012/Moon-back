@@ -17,7 +17,6 @@ mongoose.connect(db, { useNewUrlParser: true },error =>{
 
 function verifyToken(req, res, next) {
     // verify the Json Token 
-    console.log('come in')
     if(!req.headers.authorization) {
       return res.status(401).send('Unauthorized request')
     }
@@ -25,13 +24,22 @@ function verifyToken(req, res, next) {
     if(token === 'null') {
       return res.status(401).send('Unauthorized request')    
     }
-    console.log(token)
-    let payload = jwt.verify(token, token.type)
+    let payload = jwt.verify(token, 'secretKey')
     if(!payload) {
-        // access token is not match
       return res.status(401).send('Unauthorized request')    
     }
-    console.log('come out ')
+
+    try {
+        const now = Date.now().valueOf() / 1000
+        if (typeof payload.exp !== 'undefined' && payload.exp < now) {
+            throw new Error(`token expired: ${JSON.stringify(token)}`)
+        }
+        if (typeof payload.nbf !== 'undefined' && payload.nbf > now) {
+            throw new Error(`token expired: ${JSON.stringify(token)}`)
+        } 
+    }catch (error) {
+        console.error(error)
+    }
 
     req.userId = payload.userid
     next()
@@ -39,25 +47,19 @@ function verifyToken(req, res, next) {
 
 
 router.post('/register', (req, res) =>{
+
     let userData = req.body;
     let user = new User(userData);
-
-    // generate long life refresh token with 14 days life cycle
-    let payload = {userid: user._id,
-                   exp: Date.now().valueOf() / 1000 + (1209600),
-                   type: 'refreshKey' };
-    user.token = jwt.sign(payload, payload.type);
-
     
     user.save((error,registeredUser) =>{
         if(error){
             console.log(error);
-            // add stauts error handle  
         }else{
-            console.log(registeredUser,'signup successfully')
-            res.status(200).send({status: 'successful', 
-                                  data: {}
-                                });
+            let payload = {userid: registeredUser._id};
+
+            let token = jwt.sign(payload, 'secretKey');
+            
+            res.status(200).send({token,payload});
         }
     })
 })
@@ -66,26 +68,18 @@ router.post('/login', (req, res) => {
     let userData = req.body
     User.findOne({email: userData.email}, (err, user) => {
       if (err) {
-        console.log(err) 
-        // add stauts error handle   
+        console.log(err)    
       } else {
         if (!user) {
           res.status(401).send('Invalid Email or Password')
+        } else 
+        if ( user.password !== userData.password) {
+          res.status(401).send('Invalid Email or  Password')
         } else {
-            if ( user.password !== userData.password) {
-            res.status(401).send('Invalid Email or  Password')
-            } else {
-                // generate access token with 5 mins (300 sec)
-                let payload = {userid: user._id,
-                            exp: Date.now().valueOf() / 1000 + (300),
-                            type: 'accessKey' };
-                let accessToken = jwt.sign(payload, payload.type);
-                console.log(accessToken);
-                res.status(200).send({status: 'successful',
-                                    data: {refreshToken: user.token,
-                                            accessToken: accessToken}
-                                    });
-            }
+            let payload = {userid: user._id,
+                           exp: Math.floor(Date.now().valueOf() / 1000) + (60) }
+            let token = jwt.sign(payload, 'secretKey')
+            res.status(200).send({token,payload})
         }
       }
     })
@@ -93,12 +87,13 @@ router.post('/login', (req, res) => {
 
   // post
   router.post('/post', verifyToken, (req, res) =>{
+    console.log('test')
     let postData = req.body;
     let post = new Post(postData);
    
     post.save((error,postedPost) =>{
         if(error){
-            console.log('HERE',error)
+            console.log(error)
         }else{
             res.status(200).send(postedPost)
         }
@@ -137,6 +132,18 @@ router.post('/feed', verifyToken, (req, res) =>{
     }
 })
 
+// search
+// router.post('/pull', (req, res) =>{
 
-
+//     let userData = req.body;
+//     let user = new User(userData);
+   
+//     user.save((error,regesitedUser) =>{
+//         if(error){
+//             console.log(error)
+//         }else{
+//             res.status(200).send(regesitedUser)
+//         }
+//     })
+// })
 module.exports = router

@@ -16,13 +16,9 @@ export class LoginComponent implements OnInit, AfterViewInit {
   signUpRequestData = {email: '', password: ''};
   private is_login_hidden = false ;
 
-  constructor(private router: Router,
-              private location: Location,
-              private _reg: RegistrareService,
-              private _log: LoginService) {}
-
+  constructor(private router: Router, private location: Location, private _reg: RegistrareService, private _log: LoginService) { }
   ngOnInit() {
-    const user_id = sessionStorage.getItem('refreshToken');
+    const user_id = sessionStorage.getItem('token');
 
     if (user_id) {
       this.router.navigate(['/']);
@@ -63,13 +59,10 @@ export class LoginComponent implements OnInit, AfterViewInit {
         // todo: return a json user, check user's active status
         // is actived, save it to cookie and redirected to router
         res => {
-          console.log(res)
           if (res) {
             // if not 'remember me'
-            sessionStorage.setItem('accessToken', res.accessToken);
-            sessionStorage.setItem('refreshToken', res.refreshToken);
-            // this.router.navigate(['/']);
-            console.log(sessionStorage.getItem('accessToken'));
+            sessionStorage.setItem('token', res.token);
+            this.router.navigate(['/']);
           }
         },
         error => console.log(error, 'here error')
@@ -80,6 +73,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
     this._reg.signUpRequest(this.signUpRequestData)
       .subscribe(
         res => {
+          console.log(res);
           this.is_login_hidden = false;
         },
         error => {
