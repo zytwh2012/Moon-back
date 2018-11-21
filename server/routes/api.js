@@ -18,31 +18,28 @@ mongoose.connect(db, { useNewUrlParser: true },error =>{
 function verifyToken(req, res, next) {
     // verify the Json Token 
     if(!req.headers.authorization) {
-      return res.status(401).send('Unauthorized request')
+      return res.status(401).send('Unauthorized request');
     }
-    let token = req.headers.authorization.split(' ')[1]
+    let token = req.headers.authorization.split(' ')[1];
     if(token === 'null') {
-      return res.status(401).send('Unauthorized request')    
+      return res.status(401).send('Unauthorized request');
     }
-    let payload = jwt.verify(token, 'secretKey')
-    if(!payload) {
-      return res.status(401).send('Unauthorized request')    
-    }
-
-    try {
-        const now = Date.now().valueOf() / 1000
-        if (typeof payload.exp !== 'undefined' && payload.exp < now) {
-            throw new Error(`token expired: ${JSON.stringify(token)}`)
+    try{
+        let payload = jwt.verify(token, 'secretKey');
+        if(!payload) {
+            res.status(401).send('Unauthorized request');
+          }
+      
+        req.userId = payload.userid;
+        next();
+    }catch(e) {
+        // if the token expired 
+        // return 401 
+        if (e.name === 'TokenExpiredError') {
+            e.status = 401;
+            throw(e);
         }
-        if (typeof payload.nbf !== 'undefined' && payload.nbf > now) {
-            throw new Error(`token expired: ${JSON.stringify(token)}`)
-        } 
-    }catch (error) {
-        console.error(error)
     }
-
-    req.userId = payload.userid
-    next()
 }
 
 
@@ -50,36 +47,43 @@ router.post('/register', (req, res) =>{
 
     let userData = req.body;
     let user = new User(userData);
-    
+
+    let payload = {userid: registeredUser._id,
+        exp: Math.floor(Date.now().valueOf() / 1000) + (1209600) };
+
+    let token = jwt.sign(payload, 'secretKey');
+
+    user.token = token
+
     user.save((error,registeredUser) =>{
         if(error){
             console.log(error);
         }else{
-            let payload = {userid: registeredUser._id};
-
-            let token = jwt.sign(payload, 'secretKey');
-            
-            res.status(200).send({token,payload});
+            console.log(registeredUser)             
+            res.status(200).send({"status" : 'successful'});
         }
     })
 })
 
 router.post('/login', (req, res) => {
-    let userData = req.body
+    let userData = req.body;
     User.findOne({email: userData.email}, (err, user) => {
       if (err) {
-        console.log(err)    
+        console.log(err);
       } else {
         if (!user) {
           res.status(401).send('Invalid Email or Password')
         } else 
         if ( user.password !== userData.password) {
-          res.status(401).send('Invalid Email or  Password')
+          res.status(401).send('Invalid Email or  Password');
         } else {
             let payload = {userid: user._id,
-                           exp: Math.floor(Date.now().valueOf() / 1000) + (60) }
-            let token = jwt.sign(payload, 'secretKey')
-            res.status(200).send({token,payload})
+                           exp: Math.floor(Date.now().valueOf() / 1000) + (20) }
+            let accessToken = jwt.sign(payload, 'secretKey');
+            let refreshToken = user.token;
+            res.status(200).send({ "status" : 'successful',
+                                   "data" : {refreshToken, accessToken} 
+                                }); 
         }
       }
     })
@@ -114,7 +118,7 @@ router.post('/feed', verifyToken, (req, res) =>{
             .skip(count)
             .exec((error, post) => {
                 if (error) {
-                console.log(err)    
+                console.log(err,'haotianzhu')    
                 }else {
                 }res.status(200).send(post)
             });
@@ -125,7 +129,7 @@ router.post('/feed', verifyToken, (req, res) =>{
             .skip(count)
             .exec((error, post) => {
                 if (error) {
-                console.log(err)    
+                console.log(err,'haotianzhu')    
                 }else {
                 }res.status(200).send(post)
             });

@@ -18,17 +18,17 @@ export class TokenService implements HttpInterceptor {
 
 
   getToken() {
-    if (sessionStorage.getItem('token')) {
-      return sessionStorage.getItem('token');
-    } else if (localStorage.getItem('token')) {
-      return localStorage.getItem('token');
+    if (sessionStorage.getItem('accessToken')) {
+      return sessionStorage.getItem('accessToken');
+    } else if (localStorage.getItem('accessToken')) {
+      return localStorage.getItem('accessToken');
     } else {
       return null;
     }
   }
 
   loggedIn() {
-    return !!localStorage.getItem('token') || !!sessionStorage.getItem('token');
+    return !!localStorage.getItem('accessToken') || !!sessionStorage.getItem('accessToken');
   }
 }
 
