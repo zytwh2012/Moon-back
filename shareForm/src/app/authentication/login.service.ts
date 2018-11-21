@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map, catchError } from 'rxjs/operators';
-import { error } from '@angular/compiler/src/util';
 
 
 
@@ -16,7 +15,6 @@ export class LoginService {
   constructor(private http: HttpClient) { }
 
   loginInRequest(user) {
-    console.log('haotianzhu');
     return this.http.post<any>(this._registerUrl, user);
   }
 }

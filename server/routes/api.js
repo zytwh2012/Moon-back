@@ -26,9 +26,8 @@ function verifyToken(req, res, next) {
     }
     try{
         let payload = jwt.verify(token, 'secretKey');
-        
         if(!payload) {
-            return res.status(401).send('Unauthorized request');
+            res.status(401).send('Unauthorized request');
           }
       
         req.userId = payload.userid;
@@ -37,7 +36,8 @@ function verifyToken(req, res, next) {
         // if the token expired 
         // return 401 
         if (e.name === 'TokenExpiredError') {
-            return res.status(401).send( e.name);
+            e.status = 401;
+            throw(e);
         }
     }
 }
@@ -118,7 +118,7 @@ router.post('/feed', verifyToken, (req, res) =>{
             .skip(count)
             .exec((error, post) => {
                 if (error) {
-                console.log(err)    
+                console.log(err,'haotianzhu')    
                 }else {
                 }res.status(200).send(post)
             });
@@ -129,7 +129,7 @@ router.post('/feed', verifyToken, (req, res) =>{
             .skip(count)
             .exec((error, post) => {
                 if (error) {
-                console.log(err)    
+                console.log(err,'haotianzhu')    
                 }else {
                 }res.status(200).send(post)
             });
