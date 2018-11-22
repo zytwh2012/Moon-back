@@ -9,7 +9,8 @@ var postSchema = new Schema({
   postContent: Map,
   title: String,
   branch: String,
-  lastEdited: Date
+  lastEdited: Date,
+  tags: [String],
 
 });
 

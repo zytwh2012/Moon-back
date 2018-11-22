@@ -78,7 +78,7 @@ router.post('/login', (req, res) => {
           res.status(401).send('Invalid Email or  Password');
         } else {
             let payload = {userid: user._id,
-                           exp: Math.floor(Date.now().valueOf() / 1000) + (20) }
+                           exp: Math.floor(Date.now().valueOf() / 1000) + (100000) }
             let accessToken = jwt.sign(payload, 'secretKey');
             let refreshToken = user.token;
             res.status(200).send({ "status" : 'successful',

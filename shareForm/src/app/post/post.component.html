@@ -1,9 +1,29 @@
-
-
+<!-- 
+{{post.post_content}}  -->
 <div class = 'post_container'>
-      <div class = "post"><mat-nav-list>
-        <a mat-list-item href="/" *ngFor="let post of posts"> {{post.id}} {{post.title}} {{post.branch}}- {{post.post_content}} </a>
-        </mat-nav-list></div>
+      <div tabindex="0" class = "post-list">
+        <mat-list class ="post">
+          <mat-list-item *ngFor="let post of posts" >
+              <mat-card >
+                <mat-card-header>
+                    <!-- <div mat-card-avatar class="post_user_icon"></div> -->
+                    <mat-card-title>{{post.title}}</mat-card-title>
+                    <mat-card-subtitle>{{post.branch}}</mat-card-subtitle>
+                  </mat-card-header>
+                  <img mat-card-image src=  {{post.post_content.snapshot}} >
+  
+                  <mat-card-content>
+                    <p class = 'post_description'> {{post.post_content.desc}} </p>
+                  </mat-card-content>
+                  <mat-card-actions>
+                      <!-- <mat-chip-list>
+                          <mat-chip *ngFor="let tag of posts">tag</mat-chip>
+                        </mat-chip-list> -->
+                  </mat-card-actions>
+              </mat-card>
+          </mat-list-item>
+        </mat-list>
+      </div>
 
 <div class = 'sidebar'>
   <mat-card class = 'auth_card'>
