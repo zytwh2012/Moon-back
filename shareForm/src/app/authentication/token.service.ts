@@ -30,35 +30,61 @@ export class TokenService implements HttpInterceptor {
               private http: HttpClient,
               private router: Router) {}
   intercept(req, next) {
-
-    const tokenizedReq = req.clone(
-      {
-        headers: req.headers.set('Authorization', 'bearer ' + this.getToken())
-      }
-    );
-    // get first try result
-    let tempReturn = next.handle(tokenizedReq).pipe(
-      tap ((res) => {
-          if (res instanceof HttpResponse) {
-            return res;
-          } else {
-          }
-        }),
-        catchError( error => {
-          if (error instanceof HttpErrorResponse) {
-            if (error.status === 401 ) {
-              // access token expired
-              if (error.name === 'HttpErrorResponse') {
-                // this.collectFailedRequest(req);
-                // send refresh token req
-                this.refreshToken();
+    const re = /token/gi;
+    if (req.url.search(re) === -1 ) {
+      const tokenizedReq = req.clone(
+        {
+          headers: req.headers.set('Authorization', 'bearer ' + this.getToken())
+        }
+      );
+      // get first try result
+      let tempReturn = next.handle(tokenizedReq).pipe(
+        tap ((res) => {
+            if (res instanceof HttpResponse) {
+              return res;
+            } else {
+            }
+          }),
+          catchError( error => {
+            if (error instanceof HttpErrorResponse) {
+              if (error.status === 401 ) {
+                // access token expired
+                if (error.name === 'HttpErrorResponse') {
+                  // this.collectFailedRequest(req);
+                  // send refresh token req
+                  return this.refreshToken();
+                }
+                return throwError(error);
               }
+              // else not HttpErrorResponse
               return throwError(error);
+            }}));
+      return tempReturn;
+    } else {
+      return next.handle(req).pipe(
+        tap ((event) => {
+            console.log('event1', event)
+            if (event instanceof HttpResponse) {
+              return event;
+            } else {
+            }
+          }),
+          catchError(( error => {
+            console.log('event2', error);
+            if (error instanceof HttpErrorResponse) {
+              if (error.status === 401 ) {
+                // refresh token expired
+                if (error.name === 'HttpErrorResponse') {
+                  localStorage.clear();
+                  sessionStorage.clear();
+                  this.router.navigate(['/login']);
+                }
+              }
             }
             // else not HttpErrorResponse
             return throwError(error);
-          }}));
-    return tempReturn;
+            })));
+    }
   }
 
 
@@ -93,29 +119,7 @@ export class TokenService implements HttpInterceptor {
     const _headers = new HttpHeaders({'Content-Type': 'application/json',
                                   'Authorization':  'bearer ' + token
                                 });
-    return this.http.get<any>(_refreshUrl).pipe(
-      tap ((event) => {
-          console.log('event1', event)
-          if (event instanceof HttpResponse) {
-            return event;
-          } else {
-          }
-        }),
-        catchError(( error => {
-          console.log('event2', error);
-          if (error instanceof HttpErrorResponse) {
-            if (error.status === 401 ) {
-              // refresh token expired
-              if (error.name === 'HttpErrorResponse') {
-                localStorage.clear();
-                sessionStorage.clear();
-                this.router.navigate(['/login']);
-              }
-            }
-          }
-          // else not HttpErrorResponse
-          return throwError(error);
-          })));
+    return this.http.get<any>(_refreshUrl);
         // .subscribe( data => {
         //   sessionStorage.setItem('accessToken', data.data.accessToken);
         // },
