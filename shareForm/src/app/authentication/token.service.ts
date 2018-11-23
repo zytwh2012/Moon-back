@@ -4,7 +4,7 @@ import { HttpClient} from '@angular/common/http';
 import { tap , map, catchError} from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { Router } from '@angular/router';
-
+import { HttpInterceptorHandler } from '@angular/common/http/src/interceptor';
 
 
 
@@ -26,13 +26,18 @@ export class TokenService implements HttpInterceptor {
     this.cachedRequests.pop();
   }
 
-  constructor(private injector: Injector, private http: HttpClient, private router: Router) {}
+  constructor(private injector: Injector,
+              private http: HttpClient,
+              private router: Router) {}
   intercept(req, next) {
+
     const tokenizedReq = req.clone(
       {
         headers: req.headers.set('Authorization', 'bearer ' + this.getToken())
       }
     );
+    let is_auth = false;
+    // get first try result
     return next.handle(tokenizedReq).pipe(
       tap ((res) => {
           if (res instanceof HttpResponse) {
@@ -40,21 +45,26 @@ export class TokenService implements HttpInterceptor {
           } else {
           }
         }),
-        catchError(( error => {
+        catchError( error => {
           if (error instanceof HttpErrorResponse) {
             if (error.status === 401 ) {
               // access token expired
               if (error.name === 'HttpErrorResponse') {
                 // this.collectFailedRequest(req);
-                this.refreshToken();
+                // send refresh token req
+                is_auth = false;
               }
+              return throwError(error);
             }
+            // else not HttpErrorResponse
             return throwError(error);
-          }
-          // else not HttpErrorResponse
-          return throwError(error);
-          })
-        ));
+          }}));
+    // if (is_auth) {
+    //   return tempReturn;
+    // } else {
+    //   console.log('hh')
+    // }
+    // return tempReturn;
   }
 
 
@@ -67,7 +77,6 @@ export class TokenService implements HttpInterceptor {
     } else {
       token = null;
     }
-    console.log('get token', token);
     return token;
   }
 
@@ -90,34 +99,33 @@ export class TokenService implements HttpInterceptor {
     const _headers = new HttpHeaders({'Content-Type': 'application/json',
                                   'Authorization':  'bearer ' + token
                                 });
-
-    return this.http.get<any>(_refreshUrl, { headers: _headers });
-    // .pipe(
-      // tap ((event) => {
-      //   console.log('refresh',event)
-      //     if (event instanceof HttpResponse) {
-      //       return event;
-      //     } else {
-      //     }
-      //   }),
-      //   catchError(( error => {
-      //     console.log('token refree22')
-      //     if (error instanceof HttpErrorResponse) {
-      //       if (error.status === 401 ) {
-      //         // refresh token expired
-      //         if (error.name === 'HttpErrorResponse') {
-      //           // this.collectFailedRequest(req);
-      //           this.router.navigate(['/']);
-      //         }
-      //       }
-      //     }
-      //     // else not HttpErrorResponse
-      //     return throwError(error);
-      //     })
-      //   ));
+    return this.http.get<any>(_refreshUrl).pipe(
+      tap ((event) => {
+          console.log('event1', event)
+          if (event instanceof HttpResponse) {
+            return event;
+          } else {
+          }
+        }),
+        catchError(( error => {
+          console.log('event2', error);
+          if (error instanceof HttpErrorResponse) {
+            if (error.status === 401 ) {
+              // refresh token expired
+              if (error.name === 'HttpErrorResponse') {
+                localStorage.clear();
+                sessionStorage.clear();
+                this.router.navigate(['/login']);
+              }
+            }
+          }
+          // else not HttpErrorResponse
+          return throwError(error);
+          })));
+        // .subscribe( data => {
+        //   sessionStorage.setItem('accessToken', data.data.accessToken);
+        // },
+        // // error => console.log(error)
+        // );
   }
-
-
 }
-
-

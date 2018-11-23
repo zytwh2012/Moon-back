@@ -21,9 +21,11 @@ export class PostService {
     return this.http.post<Post[]>(this._post_url, branchJson)
                     .pipe(
                         tap( posts => {
+                          console.log(posts,'post')
                           return posts;
                           }), catchError(
                               (error: any) => {
+                                console.log(error,'error')
                                 // this._auth.collectFailedRequest(request);
                                 return throwError(error);
                               })

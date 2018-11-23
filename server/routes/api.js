@@ -103,7 +103,7 @@ router.post('/login', (req, res) => {
   })
 
   // post
-  router.post('/post', (req, res) =>{
+  router.post('/post', verifyToken,(req, res) => {
     let postData = req.body;
     let post = new Post(postData);
     
@@ -122,7 +122,6 @@ router.post('/feed', (req, res) =>{
     let pullRequest = req.body;
     let branchReq = pullRequest.branch;
     let count = pullRequest.count;
-
     if (branchReq == ''){
         Post.find()
             .sort({'last_edited': -1})
@@ -130,9 +129,10 @@ router.post('/feed', (req, res) =>{
             .skip(count)
             .exec((error, post) => {
                 if (error) {
-                console.log(err,'haotianzhu')    
+                console.log(err,'error')    
                 }else {
-                }res.status(200).send(post)
+                }
+                return res.status(200).send(post)
             });
     }else{
         Post.find({branch: branchReq})
@@ -141,21 +141,22 @@ router.post('/feed', (req, res) =>{
             .skip(count)
             .exec((error, post) => {
                 if (error) {
-                console.log(err,'haotianzhu')    
+                console.log(err,'error')    
                 }else {
-                    return res.status(401).send('1111')
-                }res.status(200).send(post)
+                }
+                return res.status(200).send(post)
             });
     }
 })
 
 
-router.get('/token', (req, res) => {
+router.get('/token', verifyToken, (req, res) => {
     let payload = {userid: req.userId,
         exp: Math.floor(Date.now().valueOf() / 1000) + (300)}
     let accessToken = jwt.sign(payload, 'secretKey');
-    console.log('send')
-    return res.status(200).send({accessToken})
+    console.log('accessToken',accessToken)
+    return res.status(200).send({ "status" : 'successful', 
+                                "data" : {accessToken}})
 })
 
 module.exports = router
