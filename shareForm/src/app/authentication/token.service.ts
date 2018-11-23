@@ -36,9 +36,8 @@ export class TokenService implements HttpInterceptor {
         headers: req.headers.set('Authorization', 'bearer ' + this.getToken())
       }
     );
-    let is_auth = false;
     // get first try result
-    return next.handle(tokenizedReq).pipe(
+    let tempReturn = next.handle(tokenizedReq).pipe(
       tap ((res) => {
           if (res instanceof HttpResponse) {
             return res;
@@ -52,19 +51,14 @@ export class TokenService implements HttpInterceptor {
               if (error.name === 'HttpErrorResponse') {
                 // this.collectFailedRequest(req);
                 // send refresh token req
-                is_auth = false;
+                this.refreshToken();
               }
               return throwError(error);
             }
             // else not HttpErrorResponse
             return throwError(error);
           }}));
-    // if (is_auth) {
-    //   return tempReturn;
-    // } else {
-    //   console.log('hh')
-    // }
-    // return tempReturn;
+    return tempReturn;
   }
 
 

@@ -118,7 +118,7 @@ router.post('/login', (req, res) => {
 
 
 // feed
-router.post('/feed', (req, res) =>{
+router.post('/feed', verifyToken, (req, res) =>{
     let pullRequest = req.body;
     let branchReq = pullRequest.branch;
     let count = pullRequest.count;
