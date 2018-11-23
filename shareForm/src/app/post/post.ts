@@ -3,8 +3,9 @@ export interface Post {
     postOwner_id: Number;
     parent_post: Number;
     child_post: Number;
-    postContent: String;
+    postContent: Object;
     title: String;
     branch: String;
     lastEdited: Date;
+    tags: [String];
 }

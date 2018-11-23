@@ -6,10 +6,11 @@ var postSchema = new Schema({
   postOwner_id: Number,
   parent_post: Number,
   child_post: Number,
-  postContent: String,
+  postContent: Map,
   title: String,
   branch: String,
-  lastEdited: Date
+  lastEdited: Date,
+  tags: [String],
 
 });
 
