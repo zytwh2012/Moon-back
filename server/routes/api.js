@@ -18,15 +18,19 @@ mongoose.connect(db, { useNewUrlParser: true },error =>{
 function verifyToken(req, res, next) {
     // verify the Json Token 
     if(!req.headers.authorization) {
-      return res.status(401).send('Unauthorized request');
+        return res.status(401).send('Unauthorized request');
     }
     let token = req.headers.authorization.split(' ')[1];
+
     if(token === 'null') {
-      return res.status(401).send('Unauthorized request');
+        return res.status(401).send('Unauthorized request');
     }
-    let payload = jwt.verify(token, 'secretKey');
-    
-    req.userId = payload.userid;
+    try {
+        let payload = jwt.verify(token, 'secretKey');
+        req.userId = payload.userid;
+    } catch (e){
+        return res.status(401).send('Unauthorized request');
+    }
     next();
 }
 
@@ -66,7 +70,7 @@ router.post('/login', (req, res) => {
           res.status(401).send('Invalid Email or  Password');
         } else {
             let payload = {userid: user._id,
-                        exp: Math.floor(Date.now().valueOf() / 1000) + (300)}
+                        exp: Math.floor(Date.now().valueOf() / 1000) + (5)}
             let accessToken = jwt.sign(payload, 'secretKey');
             var refreshToken = user.token;
             if (!refreshToken) {
