@@ -60,15 +60,17 @@ export class TokenService implements HttpInterceptor {
                       if (res.status === 'successful') {
                         sessionStorage.setItem('accessToken', res.data.accessToken);
                       }
-                    }
-                  );
-                  // return;
-                }
-                return throwError(error);
+                    },
+                    (err) => {
+                      localStorage.clear();
+                      sessionStorage.clear();
+                      this.router.navigate(['/login']);
+                    });
               }
               // else not HttpErrorResponse
               return throwError(error);
-            }}));
+            }
+          }}));
     } else {
 
       const refreshToken = this.getFreshToken();
@@ -103,7 +105,6 @@ export class TokenService implements HttpInterceptor {
                   localStorage.clear();
                   sessionStorage.clear();
                   this.router.navigate(['/login']);
-                  return;
                 }
               }
             }
