@@ -36,10 +36,8 @@ function verifyToken(req, res, next) {
     }catch(e) {
         // if the token expired 
         // return 401 
-        console.log('here',e.name,e.name === 'TokenExpiredError')
         if (e.name === 'TokenExpiredError') {
-            throw e;
-            // res.status(401).send('Unauthorized request')
+            res.status(401).send('Unauthorized request')
         }
     }
 }
@@ -106,7 +104,6 @@ router.post('/login', (req, res) => {
 
   // post
   router.post('/post', verifyToken, (req, res) =>{
-    console.log('test')
     let postData = req.body;
     let post = new Post(postData);
    

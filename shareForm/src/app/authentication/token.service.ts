@@ -27,20 +27,19 @@ export class TokenService implements HttpInterceptor {
         headers: req.headers.set('Authorization', 'bearer ' + this.getToken())
       }
     );
-    return next.handle(tokenizedReq);
-    // return next.handle(tokenizedReq).pipe(
-    //   tap ((res) => {
-    //       if (res) {
-    //         console.log(res, 'res');
-    //         return res;
-    //       }} ,
-    //       catchError(
-    //         (error: any) => {
-    //           // this._auth.collectFailedRequest(request);
-    //           console.log(error, 'error');
-    //           return throwError(error);
-    //       })
-    // ));
+    return next.handle(tokenizedReq).pipe(
+      tap ((res) => {
+          if (res) {
+            console.log(res, 'res');
+            return res;
+          }} ,
+          catchError(
+            (error: any) => {
+              // this._auth.collectFailedRequest(request);
+              console.log(error, 'error');
+              return throwError(error);
+          })
+    ));
   }
 
 
