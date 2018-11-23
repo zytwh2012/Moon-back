@@ -40,7 +40,6 @@ export class TokenService implements HttpInterceptor {
       // get first try result
       let tempReturn = next.handle(tokenizedReq).pipe(
         tap ((res) => {
-          console.log('res',res);
           if (res instanceof HttpResponse) {
             return res;
           } else {
@@ -54,7 +53,14 @@ export class TokenService implements HttpInterceptor {
                 if (error.name === 'HttpErrorResponse') {
                   // this.collectFailedRequest(req);
                   // send refresh token req
-                  return this.refreshToken();
+                  this.refreshToken().subscribe(
+                    (res) => {
+                      if (res.status === 'successful') {
+                        sessionStorage.setItem('accessToken', res.data.accessToken);
+                      }
+                    }
+                  );
+                  // return;
                 }
                 return throwError(error);
               }
@@ -63,12 +69,28 @@ export class TokenService implements HttpInterceptor {
             }}));
       return tempReturn;
     } else {
-      // return next.handle(req);
-      return next.handle(req).pipe(
-        tap ((event) => {
-            console.log('event1', event)
-            if (event instanceof HttpResponse) {
-              return event;
+
+      const refreshToken = this.getFreshToken();
+
+      // if no refresh token
+      if (refreshToken === null) {
+        localStorage.clear();
+        sessionStorage.clear();
+        this.router.navigate(['/login']);
+        return;
+      }
+
+      // else
+      const tokenizedReq = req.clone(
+        {
+          headers: req.headers.set('Authorization', 'bearer ' + refreshToken)
+        }
+      );
+
+      return next.handle(tokenizedReq).pipe(
+        tap ((res) => {
+            if (res instanceof HttpResponse) {
+              return res;
             } else {
             }
           }),
@@ -81,6 +103,7 @@ export class TokenService implements HttpInterceptor {
                   localStorage.clear();
                   sessionStorage.clear();
                   this.router.navigate(['/login']);
+                  return;
                 }
               }
             }
@@ -106,22 +129,24 @@ export class TokenService implements HttpInterceptor {
   loggedIn() {
     return !!localStorage.getItem('refreshToken') || !!sessionStorage.getItem('refreshToken');
   }
-
-  refreshToken() {
-    let token: any;
-    const _refreshUrl = 'http://localhost:3000/api/token';
+  getFreshToken() {
     // find refresh token
     if (sessionStorage.getItem('refreshToken')) {
-      token =  sessionStorage.getItem('refreshToken');
+      return sessionStorage.getItem('refreshToken');
     } else if (localStorage.getItem('refreshToken')) {
-      token =  localStorage.getItem('refreshToken');
+      return localStorage.getItem('refreshToken');
     } else {
-      token = null;
+      return null;
     }
+  }
 
-    const _headers = new HttpHeaders({'Content-Type': 'application/json',
-                                  'Authorization':  'bearer ' + token
-                                });
+  refreshToken() {
+
+    const _refreshUrl = 'http://localhost:3000/api/token';
+
+    // const _headers = new HttpHeaders({'Content-Type': 'application/json',
+    //                               'Authorization':  'bearer ' + token
+    //                             });
     return this.http.get<any>(_refreshUrl);
         // .subscribe( data => {
         //   sessionStorage.setItem('accessToken', data.data.accessToken);
