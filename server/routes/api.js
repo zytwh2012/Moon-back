@@ -15,7 +15,7 @@ mongoose.connect(db, { useNewUrlParser: true },error =>{
     }
 })
 
-function verifyToken(req, res, next) {
+function verifyToken(req, res) {
     // verify the Json Token 
     if(!req.headers.authorization) {
       return res.status(401).send('Unauthorized request');
@@ -37,7 +37,7 @@ function verifyToken(req, res, next) {
         // if the token expired 
         // return 401 
         if (e.name === 'TokenExpiredError') {
-            res.status(401).send('Unauthorized request')
+            res.status(401).send('Unauthorized request');
         }
     }
 }
@@ -103,10 +103,10 @@ router.post('/login', (req, res) => {
   })
 
   // post
-  router.post('/post', verifyToken, (req, res) =>{
+  router.post('/post', (req, res) =>{
     let postData = req.body;
     let post = new Post(postData);
-   
+    
     post.save((error,postedPost) =>{
         if(error){
             console.log(error)
@@ -118,7 +118,7 @@ router.post('/login', (req, res) => {
 
 
 // feed
-router.post('/feed', verifyToken, (req, res) =>{
+router.post('/feed', (req, res) =>{
     let pullRequest = req.body;
     let branchReq = pullRequest.branch;
     let count = pullRequest.count;
@@ -143,6 +143,7 @@ router.post('/feed', verifyToken, (req, res) =>{
                 if (error) {
                 console.log(err,'haotianzhu')    
                 }else {
+                    return res.status(401).send('1111')
                 }res.status(200).send(post)
             });
     }
@@ -153,7 +154,8 @@ router.get('/token', (req, res) => {
     let payload = {userid: req.userId,
         exp: Math.floor(Date.now().valueOf() / 1000) + (300)}
     let accessToken = jwt.sign(payload, 'secretKey');
-    res.status(200).send({accessToken})
+    console.log('send')
+    return res.status(200).send({accessToken})
 })
 
 module.exports = router

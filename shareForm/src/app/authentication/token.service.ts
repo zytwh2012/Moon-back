@@ -1,26 +1,32 @@
 import { Injectable, Injector } from '@angular/core';
-import { HttpInterceptor, HttpHeaders, HttpRequest, HttpErrorResponse, HttpEvent } from '@angular/common/http';
+import { HttpInterceptor, HttpHeaders, HttpRequest, HttpErrorResponse, HttpEvent, HttpResponse } from '@angular/common/http';
 import { HttpClient} from '@angular/common/http';
 import { tap , map, catchError} from 'rxjs/operators';
 import { throwError } from 'rxjs';
+import { Router } from '@angular/router';
+
+
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class TokenService implements HttpInterceptor {
 
-  // cachedRequests: Array<HttpRequest<any>> = [];
+  cachedRequests: Array<HttpRequest<any>> = [];
 
-  // public collectFailedRequest(request): void {
-  //     this.cachedRequests.push(request);
-  // }
+  public collectFailedRequest(request): void {
+      this.cachedRequests.push(request);
+  }
 
-  // public retryFailedRequests(): void {
-  //   // retry the requests. this method can
-  //   // be called after the token is refreshed
-  // }
+  public retryFailedRequests(): void {
+    // retry the requests. this method can
+    // be called after the token is refreshed
 
-  constructor(private injector: Injector, private http: HttpClient) {}
+    this.cachedRequests.pop();
+  }
+
+  constructor(private injector: Injector, private http: HttpClient, private router: Router) {}
   intercept(req, next) {
     const tokenizedReq = req.clone(
       {
@@ -29,23 +35,31 @@ export class TokenService implements HttpInterceptor {
     );
     return next.handle(tokenizedReq).pipe(
       tap ((res) => {
-          if (res) {
-            console.log(res, 'res');
+          if (res instanceof HttpResponse) {
             return res;
-          }} ,
-          catchError(
-            (error: any) => {
-              // this._auth.collectFailedRequest(request);
-              console.log(error, 'error');
-              return throwError(error);
+          } else {
+          }
+        }),
+        catchError(( error => {
+          if (error instanceof HttpErrorResponse) {
+            if (error.status === 401 ) {
+              // access token expired
+              if (error.name === 'HttpErrorResponse') {
+                // this.collectFailedRequest(req);
+                this.refreshToken();
+              }
+            }
+            return throwError(error);
+          }
+          // else not HttpErrorResponse
+          return throwError(error);
           })
-    ));
+        ));
   }
 
 
   getToken() {
     let token: any;
-
     if ( sessionStorage.getItem('accessToken')) {
       token =  sessionStorage.getItem('accessToken');
     } else if (sessionStorage.getItem('accessToken')) {
@@ -78,6 +92,29 @@ export class TokenService implements HttpInterceptor {
                                 });
 
     return this.http.get<any>(_refreshUrl, { headers: _headers });
+    // .pipe(
+      // tap ((event) => {
+      //   console.log('refresh',event)
+      //     if (event instanceof HttpResponse) {
+      //       return event;
+      //     } else {
+      //     }
+      //   }),
+      //   catchError(( error => {
+      //     console.log('token refree22')
+      //     if (error instanceof HttpErrorResponse) {
+      //       if (error.status === 401 ) {
+      //         // refresh token expired
+      //         if (error.name === 'HttpErrorResponse') {
+      //           // this.collectFailedRequest(req);
+      //           this.router.navigate(['/']);
+      //         }
+      //       }
+      //     }
+      //     // else not HttpErrorResponse
+      //     return throwError(error);
+      //     })
+      //   ));
   }
 
 
