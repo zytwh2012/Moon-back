@@ -30,15 +30,17 @@ export class TokenService implements HttpInterceptor {
               private http: HttpClient,
               private router: Router) {}
   intercept(req, next) {
-    const re = /token/gi;
-    if (req.url.search(re) === -1 ) {
+    const token_re = /token/gi;
+
+    if (req.url.search(token_re) === -1 ) {
+
       const tokenizedReq = req.clone(
         {
           headers: req.headers.set('Authorization', 'bearer ' + this.getToken())
         }
       );
       // get first try result
-      let tempReturn = next.handle(tokenizedReq).pipe(
+      return next.handle(tokenizedReq).pipe(
         tap ((res) => {
           if (res instanceof HttpResponse) {
             return res;
@@ -67,7 +69,6 @@ export class TokenService implements HttpInterceptor {
               // else not HttpErrorResponse
               return throwError(error);
             }}));
-      return tempReturn;
     } else {
 
       const refreshToken = this.getFreshToken();
@@ -95,7 +96,6 @@ export class TokenService implements HttpInterceptor {
             }
           }),
           catchError(( error => {
-            console.log('event2', error);
             if (error instanceof HttpErrorResponse) {
               if (error.status === 401 ) {
                 // refresh token expired

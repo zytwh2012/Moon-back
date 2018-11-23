@@ -72,20 +72,20 @@ router.post('/login', (req, res) => {
             let payload = {userid: user._id,
                         exp: Math.floor(Date.now().valueOf() / 1000) + (5)}
             let accessToken = jwt.sign(payload, 'secretKey');
-            var refreshToken = user.token;
-            if (!refreshToken) {
-                let repayload = {userid: user._id,
-                    exp: Math.floor(Date.now().valueOf() / 1000) + (1209600)};
+
     
-                let retoken = jwt.sign(repayload, 'secretKey');
-                user.token = retoken
-                refreshToken = user.token;
-                User.updateOne({_id: user._id },
-                            {'token': refreshToken},
-                            (err) => {
-                                if(err) throw err
-                            });
-            }
+            let repayload = {userid: user._id,
+                exp: Math.floor(Date.now().valueOf() / 1000) + (10)};
+
+            let retoken = jwt.sign(repayload, 'secretKey');
+            user.token = retoken
+            refreshToken = user.token;
+            User.updateOne({_id: user._id },
+                        {'token': refreshToken},
+                        (err) => {
+                            if(err) throw err
+                        });
+
             res.status(200).send({ "status" : 'successful',
                                    "data" : {refreshToken, accessToken} 
                                 }); 
