@@ -10,7 +10,7 @@
                     <mat-card-title>{{post.title}}</mat-card-title>
                     <mat-card-subtitle>{{post.branch}}</mat-card-subtitle>
                   </mat-card-header>
-                  <img mat-card-image src=  {{post.post_content.snapshot}} >
+                  <img mat-card-image *ngIf="post.post_content.snapshot" src=  {{post.post_content.snapshot}} >
   
                   <mat-card-content>
                     <p class = 'post_description'> {{post.post_content.desc}} </p>
