@@ -15,7 +15,7 @@ mongoose.connect(db, { useNewUrlParser: true },error =>{
     }
 })
 
-function verifyToken(req, res) {
+function verifyToken(req, res, next) {
     // verify the Json Token 
     if(!req.headers.authorization) {
       return res.status(401).send('Unauthorized request');
@@ -24,22 +24,10 @@ function verifyToken(req, res) {
     if(token === 'null') {
       return res.status(401).send('Unauthorized request');
     }
-    try{
-        let payload = jwt.verify(token, 'secretKey');
-
-        if(!payload) {
-            res.status(401).send('Unauthorized request');
-          }
-      
-        req.userId = payload.userid;
-        next();
-    }catch(e) {
-        // if the token expired 
-        // return 401 
-        if (e.name === 'TokenExpiredError') {
-            res.status(401).send('Unauthorized request');
-        }
-    }
+    let payload = jwt.verify(token, 'secretKey');
+    
+    req.userId = payload.userid;
+    next();
 }
 
 

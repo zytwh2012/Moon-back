@@ -40,10 +40,12 @@ export class TokenService implements HttpInterceptor {
       // get first try result
       let tempReturn = next.handle(tokenizedReq).pipe(
         tap ((res) => {
-            if (res instanceof HttpResponse) {
-              return res;
-            } else {
-            }
+          console.log('res',res);
+          if (res instanceof HttpResponse) {
+            return res;
+          } else {
+            return res;
+          }
           }),
           catchError( error => {
             if (error instanceof HttpErrorResponse) {
@@ -61,6 +63,7 @@ export class TokenService implements HttpInterceptor {
             }}));
       return tempReturn;
     } else {
+      // return next.handle(req);
       return next.handle(req).pipe(
         tap ((event) => {
             console.log('event1', event)
