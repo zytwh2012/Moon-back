@@ -18,28 +18,20 @@ mongoose.connect(db, { useNewUrlParser: true },error =>{
 function verifyToken(req, res, next) {
     // verify the Json Token 
     if(!req.headers.authorization) {
-      return res.status(401).send('Unauthorized request');
+        return res.status(401).send('Unauthorized request');
     }
     let token = req.headers.authorization.split(' ')[1];
+
     if(token === 'null') {
-      return res.status(401).send('Unauthorized request');
+        return res.status(401).send('Unauthorized request');
     }
-    try{
+    try {
         let payload = jwt.verify(token, 'secretKey');
-        if(!payload) {
-            res.status(401).send('Unauthorized request');
-          }
-      
         req.userId = payload.userid;
-        next();
-    }catch(e) {
-        // if the token expired 
-        // return 401 
-        if (e.name === 'TokenExpiredError') {
-            e.status = 401;
-            throw(e);
-        }
+    } catch (e){
+        return res.status(401).send('Unauthorized request');
     }
+    next();
 }
 
 
@@ -48,8 +40,8 @@ router.post('/register', (req, res) =>{
     let userData = req.body;
     let user = new User(userData);
 
-    let payload = {userid: registeredUser._id,
-        exp: Math.floor(Date.now().valueOf() / 1000) + (1209600) };
+    let payload = {userid: user._id,
+                exp: Math.floor(Date.now().valueOf() / 1000) + (1209600)};
 
     let token = jwt.sign(payload, 'secretKey');
 
@@ -78,9 +70,22 @@ router.post('/login', (req, res) => {
           res.status(401).send('Invalid Email or  Password');
         } else {
             let payload = {userid: user._id,
-                           exp: Math.floor(Date.now().valueOf() / 1000) + (100000) }
+                        exp: Math.floor(Date.now().valueOf() / 1000) + (300)}
             let accessToken = jwt.sign(payload, 'secretKey');
-            let refreshToken = user.token;
+
+    
+            let repayload = {userid: user._id,
+                exp: Math.floor(Date.now().valueOf() / 1000) + (1209600)};
+
+            let retoken = jwt.sign(repayload, 'secretKey');
+            user.token = retoken
+            refreshToken = user.token;
+            User.updateOne({_id: user._id },
+                        {'token': refreshToken},
+                        (err) => {
+                            if(err) throw err
+                        });
+
             res.status(200).send({ "status" : 'successful',
                                    "data" : {refreshToken, accessToken} 
                                 }); 
@@ -90,11 +95,10 @@ router.post('/login', (req, res) => {
   })
 
   // post
-  router.post('/post', verifyToken, (req, res) =>{
-    console.log('test')
+  router.post('/post', verifyToken,(req, res) => {
     let postData = req.body;
     let post = new Post(postData);
-   
+    
     post.save((error,postedPost) =>{
         if(error){
             console.log(error)
@@ -110,7 +114,6 @@ router.post('/feed', verifyToken, (req, res) =>{
     let pullRequest = req.body;
     let branchReq = pullRequest.branch;
     let count = pullRequest.count;
-
     if (branchReq == ''){
         Post.find()
             .sort({'last_edited': -1})
@@ -118,9 +121,10 @@ router.post('/feed', verifyToken, (req, res) =>{
             .skip(count)
             .exec((error, post) => {
                 if (error) {
-                console.log(err,'haotianzhu')    
+                console.log(err,'error')    
                 }else {
-                }res.status(200).send(post)
+                }
+                return res.status(200).send(post)
             });
     }else{
         Post.find({branch: branchReq})
@@ -129,25 +133,22 @@ router.post('/feed', verifyToken, (req, res) =>{
             .skip(count)
             .exec((error, post) => {
                 if (error) {
-                console.log(err,'haotianzhu')    
+                console.log(err,'error')    
                 }else {
-                }res.status(200).send(post)
+                }
+                return res.status(200).send(post)
             });
     }
 })
 
-// search
-// router.post('/pull', (req, res) =>{
 
-//     let userData = req.body;
-//     let user = new User(userData);
-   
-//     user.save((error,regesitedUser) =>{
-//         if(error){
-//             console.log(error)
-//         }else{
-//             res.status(200).send(regesitedUser)
-//         }
-//     })
-// })
+router.get('/token', verifyToken, (req, res) => {
+    let payload = {userid: req.userId,
+        exp: Math.floor(Date.now().valueOf() / 1000) + (300)}
+    let accessToken = jwt.sign(payload, 'secretKey');
+    console.log('accessToken',accessToken)
+    return res.status(200).send({ "status" : 'successful', 
+                                "data" : {accessToken}})
+})
+
 module.exports = router

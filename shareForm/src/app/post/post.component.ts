@@ -24,10 +24,9 @@ export class PostComponent implements OnInit , AfterViewInit {
               private _tokenService: TokenService) { }
   ngOnInit() {
     this._current_path = this._router.url.toString();
-
     this._current_path = this._current_path.substr(1, this._current_path.length );
     this._postService.getPost(this._current_path, this.posts.length)
-    .subscribe(data => this.posts = data, error => console.log(error) ); // need to send refresh token instead
+    .subscribe(data => this.posts = data, error => console.log(error));
     this._logedin = this._tokenService.loggedIn();
     console.log(this._logedin);
   }
