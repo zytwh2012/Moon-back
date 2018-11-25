@@ -1,5 +1,5 @@
 
-.post-list {
+.post_list {
     grid-area: 1/1/ 2/2;
   }
 
@@ -17,14 +17,14 @@
 .auth_card {
     position: sticky;
     position: -webkit-sticky; /* For macOS/iOS Safari */
-    top: 7%; 
+    top: 8%; 
     z-index: 1000; /* Ensure that your app's content doesn't overlap the toolbar */
     padding: 1%；
 }
 .post_description {
     color : green /* Temporary need to modify after */
 }
-.post .mat-list-item{
+.posts .mat-list-item{
     width:50%;
     height:50%;
     max-width: 60%;
@@ -33,5 +33,14 @@
     margin-bottom: 1%;
     margin-left: auto;
     margin-right: auto;
+   
+   
+}
+.post {
+    border:2px solid transparent;
+    transition: border 1s;
+}
 
+.post :hover{
+    border: 2px solid red;
 }
