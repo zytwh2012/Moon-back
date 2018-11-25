@@ -7,3 +7,4 @@
 4,Post size consistent 
 5,discuess post archtecture
 6,impement post-detail
+7,post border hover
