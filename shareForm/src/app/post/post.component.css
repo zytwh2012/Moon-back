@@ -44,3 +44,8 @@
 .post :hover{
     border: 2px solid red;
 }
+
+.posts .post mat-card :hover {
+    border: 0px;
+}
+
