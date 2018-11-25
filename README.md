@@ -4,7 +4,7 @@
 1,Remember me
 2,Token server retry failed request
 3,Fix post blue backgroud (fixed zytwh2012) 
-4,Post size consistent 
+4,Post size consistent (fixed zytwh2012) 
 5,discuess post archtecture
 6,impement post-detail
-7,post border hover
+7,post border hover(fixed zytwh2012)
