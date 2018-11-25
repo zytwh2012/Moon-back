@@ -37,14 +37,15 @@
    
 }
 .post mat-card{
-    border: 10px solid transparent;
+    border: 1px solid gray;
+    transition: 0.5s;
 }
 
 .post :hover{
-    border: 10px solid red;
+    border: 1px solid black
 }
 
 .posts .post mat-card :hover {
-    border: 10px;
+    border: 1px;
 }
 
