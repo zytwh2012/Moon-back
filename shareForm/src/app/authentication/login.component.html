@@ -17,7 +17,7 @@
     
     <div class="checkbox mb-3">
       <label>
-        <input type="checkbox" [checked]="is_remember_me"> Remember me
+        <input type="checkbox"  [checked]="is_remember_me" (change)="is_remember_me = !is_remember_me" > Remember me
       </label>
     </div>
 

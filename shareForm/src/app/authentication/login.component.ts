@@ -17,8 +17,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
   loginInRequestData = {email: '', password: ''};
   signUpRequestData = {email: '', password: ''};
   private is_login_hidden = false ;
-  private is_remember_me = localStorage.getItem('is_remember_me')
-                            .toLowerCase() === 'true' ? true : false;
+  private is_remember_me = true;
 
   constructor(private router: Router,
               private location: Location,
@@ -27,10 +26,6 @@ export class LoginComponent implements OnInit, AfterViewInit {
               private _tokenserver: TokenService) { }
   ngOnInit() {
     const user_id = this._tokenserver.loggedIn();
-    if (this.is_remember_me) {
-    } else {
-      this.is_remember_me = false;
-    }
 
     if (user_id) {
       this.router.navigate(['/']);
@@ -74,7 +69,6 @@ export class LoginComponent implements OnInit, AfterViewInit {
           if (res) {
             // if not 'remember me'
             if (this.is_remember_me) {
-              localStorage.setItem('is_remember_me', '' + this.is_remember_me );
               localStorage.setItem('refreshToken', res.data.refreshToken);
               sessionStorage.removeItem('refreshToken'); // in case
             } else {
