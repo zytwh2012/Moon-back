@@ -82,9 +82,7 @@ export class TokenService implements HttpInterceptor {
     let token: any;
     if ( sessionStorage.getItem('accessToken')) {
       token =  sessionStorage.getItem('accessToken');
-    } else if (sessionStorage.getItem('accessToken')) {
-      token =  localStorage.getItem('accessToken');
-    } else {
+    }  else {
       token = null;
     }
     return token;
