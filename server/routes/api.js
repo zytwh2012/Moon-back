@@ -70,7 +70,7 @@ router.post('/login', (req, res) => {
           res.status(401).send('Invalid Email or  Password');
         } else {
             let payload = {userid: user._id,
-                        exp: Math.floor(Date.now().valueOf() / 1000) + (5)}
+                        exp: Math.floor(Date.now().valueOf() / 1000) + (4)}
             let accessToken = jwt.sign(payload, 'secretKey');
 
     
@@ -144,9 +144,8 @@ router.post('/feed', verifyToken, (req, res) =>{
 
 router.get('/token', verifyToken, (req, res) => {
     let payload = {userid: req.userId,
-        exp: Math.floor(Date.now().valueOf() / 1000) + (5)}
+        exp: Math.floor(Date.now().valueOf() / 1000) + (4)}
     let accessToken = jwt.sign(payload, 'secretKey');
-    console.log('accessToken',accessToken)
     return res.status(200).send({ "status" : 'successful', 
                                 "data" : {accessToken}})
 })

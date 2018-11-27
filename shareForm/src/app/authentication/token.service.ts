@@ -5,13 +5,19 @@ import { tap , map, catchError, mergeMap} from 'rxjs/operators';
 import { throwError, Observable, empty, from } from 'rxjs';
 import { Router } from '@angular/router';
 import { HttpInterceptorHandler } from '@angular/common/http/src/interceptor';
-
+import { Subject } from 'rxjs';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class TokenService implements HttpInterceptor {
+
+  public storage: Subject<any> = new Subject<any>();
+
+  public publish(value: any) {
+    this.storage.next(value);
+  }
 
   constructor(private injector: Injector,
               private http: HttpClient,
@@ -21,30 +27,40 @@ export class TokenService implements HttpInterceptor {
 
     if (req.url.search(token_re) === -1 ) {
 
-      const tokenizedReq = req.clone(
+      let tokenizedReq = req.clone(
         {
           headers: req.headers.set('Authorization', 'bearer ' + this.getToken())
         }
       );
       // get first try result
       return next.handle(tokenizedReq).pipe(
-        catchError( (error, retryreq) => {
+        map( res => {
+          return res;
+        }),
+        catchError( (error) => {
           if (error instanceof HttpErrorResponse) {
             if (error.status === 401 ) {
             // access token expired
             // send refresh token req
-            return from(this.refreshToken().pipe(
-              map( (res) => {
-                console.log(res,'11111');
+            return this.refreshToken().pipe(
+              mergeMap( (res) => {
+                if (res.status === 'successful') {
+                  sessionStorage.setItem('accessToken', res.data.accessToken);
+                }
+                tokenizedReq = req.clone(
+                  {
+                    headers: req.headers.set('Authorization', 'bearer ' + this.getToken())
+                  }
+                );
+                return next.handle(tokenizedReq);
               }),
               catchError( (err) => {
                 localStorage.clear();
                 sessionStorage.clear();
                 this.router.navigate(['/login']);
                 return throwError('refresh token failed');
-              }),
-              // mergeMap(() => retryreq)
-            ));
+              })
+            );
           }
         }})
       );
