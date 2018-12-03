@@ -11,4 +11,9 @@
 
 1.2 12/02
 1.post detail
+
 2.user post function
+(Guest view non hidden only
+User view(everything) and post
+Admin view and delete)
+
