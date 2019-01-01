@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { RegistrareService } from './registrate.service';
 import { LoginService } from './login.service';
+import { TokenService } from './token.service';
+
 declare var $: any;
 
 @Component({
@@ -15,10 +17,15 @@ export class LoginComponent implements OnInit, AfterViewInit {
   loginInRequestData = {email: '', password: ''};
   signUpRequestData = {email: '', password: ''};
   private is_login_hidden = false ;
+  private is_remember_me = true;
 
-  constructor(private router: Router, private location: Location, private _reg: RegistrareService, private _log: LoginService) { }
+  constructor(private router: Router,
+              private location: Location,
+              private _reg: RegistrareService,
+              private _log: LoginService,
+              private _tokenserver: TokenService) { }
   ngOnInit() {
-    const user_id = sessionStorage.getItem('token');
+    const user_id = this._tokenserver.loggedIn();
 
     if (user_id) {
       this.router.navigate(['/']);
@@ -61,8 +68,14 @@ export class LoginComponent implements OnInit, AfterViewInit {
         res => {
           if (res) {
             // if not 'remember me'
+            if (this.is_remember_me) {
+              localStorage.setItem('refreshToken', res.data.refreshToken);
+              sessionStorage.removeItem('refreshToken'); // in case
+            } else {
+              sessionStorage.setItem('refreshToken', res.data.refreshToken);
+              localStorage.removeItem('refreshToken'); // in case
+            }
             sessionStorage.setItem('accessToken', res.data.accessToken);
-            sessionStorage.setItem('refreshToken', res.data.refreshToken);
             this.router.navigate(['/']);
           }
         },

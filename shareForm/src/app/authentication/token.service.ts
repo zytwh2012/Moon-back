@@ -1,11 +1,11 @@
 import { Injectable, Injector } from '@angular/core';
 import { HttpInterceptor, HttpHeaders, HttpRequest, HttpErrorResponse, HttpEvent, HttpResponse } from '@angular/common/http';
 import { HttpClient} from '@angular/common/http';
-import { tap , map, catchError} from 'rxjs/operators';
-import { throwError } from 'rxjs';
+import { tap , map, catchError, mergeMap} from 'rxjs/operators';
+import { throwError, Observable, empty, from } from 'rxjs';
 import { Router } from '@angular/router';
 import { HttpInterceptorHandler } from '@angular/common/http/src/interceptor';
-
+import { Subject } from 'rxjs';
 
 
 @Injectable({
@@ -13,17 +13,10 @@ import { HttpInterceptorHandler } from '@angular/common/http/src/interceptor';
 })
 export class TokenService implements HttpInterceptor {
 
-  cachedRequests: Array<HttpRequest<any>> = [];
+  public storage: Subject<any> = new Subject<any>();
 
-  public collectFailedRequest(request): void {
-      this.cachedRequests.push(request);
-  }
-
-  public retryFailedRequests(): void {
-    // retry the requests. this method can
-    // be called after the token is refreshed
-
-    this.cachedRequests.pop();
+  public publish(value: any) {
+    this.storage.next(value);
   }
 
   constructor(private injector: Injector,
@@ -34,83 +27,53 @@ export class TokenService implements HttpInterceptor {
 
     if (req.url.search(token_re) === -1 ) {
 
-      const tokenizedReq = req.clone(
+      let tokenizedReq = req.clone(
         {
           headers: req.headers.set('Authorization', 'bearer ' + this.getToken())
         }
       );
       // get first try result
       return next.handle(tokenizedReq).pipe(
-        tap ((res) => {
-          if (res instanceof HttpResponse) {
-            return res;
-          } else {
-            return res;
+        map( res => {
+          return res;
+        }),
+        catchError( (error) => {
+          if (error instanceof HttpErrorResponse) {
+            if (error.status === 401 ) {
+            // access token expired
+            // send refresh token req
+            return this.refreshToken().pipe(
+              mergeMap( (res) => {
+                if (res.status === 'successful') {
+                  sessionStorage.setItem('accessToken', res.data.accessToken);
+                }
+                tokenizedReq = req.clone(
+                  {
+                    headers: req.headers.set('Authorization', 'bearer ' + this.getToken())
+                  }
+                );
+                return next.handle(tokenizedReq);
+              }),
+              catchError( (err) => {
+                localStorage.clear();
+                sessionStorage.clear();
+                this.router.navigate(['/login']);
+                return throwError('refresh token failed');
+              })
+            );
           }
-          }),
-          catchError( error => {
-            if (error instanceof HttpErrorResponse) {
-              if (error.status === 401 ) {
-                // access token expired
-                if (error.name === 'HttpErrorResponse') {
-                  // this.collectFailedRequest(req);
-                  // send refresh token req
-                  this.refreshToken().subscribe(
-                    (res) => {
-                      if (res.status === 'successful') {
-                        sessionStorage.setItem('accessToken', res.data.accessToken);
-                      }
-                    },
-                    (err) => {
-                      localStorage.clear();
-                      sessionStorage.clear();
-                      this.router.navigate(['/login']);
-                    });
-              }
-              // else not HttpErrorResponse
-              return throwError(error);
-            }
-          }}));
+        }})
+      );
     } else {
 
       const refreshToken = this.getFreshToken();
-
-      // if no refresh token
-      if (refreshToken === null) {
-        localStorage.clear();
-        sessionStorage.clear();
-        this.router.navigate(['/login']);
-        return;
-      }
-
-      // else
       const tokenizedReq = req.clone(
         {
           headers: req.headers.set('Authorization', 'bearer ' + refreshToken)
         }
       );
 
-      return next.handle(tokenizedReq).pipe(
-        tap ((res) => {
-            if (res instanceof HttpResponse) {
-              return res;
-            } else {
-            }
-          }),
-          catchError(( error => {
-            if (error instanceof HttpErrorResponse) {
-              if (error.status === 401 ) {
-                // refresh token expired
-                if (error.name === 'HttpErrorResponse') {
-                  localStorage.clear();
-                  sessionStorage.clear();
-                  this.router.navigate(['/login']);
-                }
-              }
-            }
-            // else not HttpErrorResponse
-            return throwError(error);
-            })));
+      return next.handle(tokenizedReq);
     }
   }
 
@@ -119,9 +82,7 @@ export class TokenService implements HttpInterceptor {
     let token: any;
     if ( sessionStorage.getItem('accessToken')) {
       token =  sessionStorage.getItem('accessToken');
-    } else if (sessionStorage.getItem('accessToken')) {
-      token =  localStorage.getItem('accessToken');
-    } else {
+    }  else {
       token = null;
     }
     return token;
@@ -145,14 +106,6 @@ export class TokenService implements HttpInterceptor {
 
     const _refreshUrl = 'http://localhost:3000/api/token';
 
-    // const _headers = new HttpHeaders({'Content-Type': 'application/json',
-    //                               'Authorization':  'bearer ' + token
-    //                             });
     return this.http.get<any>(_refreshUrl);
-        // .subscribe( data => {
-        //   sessionStorage.setItem('accessToken', data.data.accessToken);
-        // },
-        // // error => console.log(error)
-        // );
   }
 }

@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Post } from './post';
 import { Observable, throwError, pipe } from 'rxjs';
-import { catchError, map, tap} from 'rxjs/operators';
+import { catchError, map, tap, retry} from 'rxjs/operators';
 import { TokenService } from '../authentication/token.service';
+
 
 @Injectable({
   providedIn: 'root'
@@ -20,13 +21,14 @@ export class PostService {
     const branchJson = {branch: request, count: reqCount};
     return this.http.post<Post[]>(this._post_url, branchJson)
                     .pipe(
-                        tap( posts => {
-                          return posts;
-                          }), catchError(
-                              (error: any) => {
-                                // this._auth.collectFailedRequest(request);
-                                return throwError(error);
-                              })
+                      tap( posts => {
+                        return posts;
+                      }),
+                      catchError(
+                        (error: any) => {
+                          // this._auth.collectFailedRequest(request);
+                          return throwError(error);
+                      })
                     );
   }
 }
