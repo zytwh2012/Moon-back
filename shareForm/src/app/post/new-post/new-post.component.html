@@ -4,8 +4,6 @@
     <div class="form-group">
       <input type="text" class="form-control" id="newPostTitle" placeholder="Title">
     </div>
-    <div class="form-group">
-      <input type="text" class="form-control" id="newPostContent" placeholder="Your post here">
-    </div>
-    <div class="dropdown-divider"></div>
+    <quill-editor ngModel = [(ngModel)]="content" ></quill-editor>
   </form>
+<p> {{content}}</p>
