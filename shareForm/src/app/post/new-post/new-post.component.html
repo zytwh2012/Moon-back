@@ -1,9 +1,36 @@
-<form class="px-4 py-3">
+<form #newPostForm = "ngForm" class="px-4 py-3">
     <p>Create a post!</p>
-<div class="dropdown-divider"></div>
+    <div class="dropdown-divider"></div>
+
     <div class="form-group">
-      <input type="text" class="form-control" id="newPostTitle" placeholder="Title">
+      <input type="text" id="newPostTitle" class="form-control " name="title" 
+      required #title="ngModel" [class.is-invalid]= "title.invalid && title.touched" maxlength="30"
+      placeholder="Title"  [(ngModel)] = "postModel.title">
+      <small class = "text-danger" [class.d-none] = "title.valid || title.untouched">Title is required for a new post.</small>
     </div>
-    <quill-editor ngModel = [(ngModel)]="content" ></quill-editor>
-  </form>
-<p> {{content}}</p>
+    
+    <div class="form-group">
+      <quill-editor   name = "content"  
+      required #content="ngModel" [class.is-invalid]= "content.invalid && content.touched"
+      [(ngModel)] = "postModel.content" ></quill-editor>
+      <small class = "text-danger" [class.d-none] = "content.valid || content.untouched">Content is required for a new post.</small>
+    </div>
+
+    <div class="form-group">
+        <label for="inputBranch">Branch</label>
+        <select id="inputBranch" class="form-control " name="branch" 
+        required #branch="ngModel" [class.is-invalid]= "branch.invalid && branch.touched"  
+        [(ngModel)]  = "postModel.branch">
+          <option>Game</option>
+          <option>Animate</option>
+          <option>Novel</option>
+        </select>
+        <small class = "text-danger" [class.d-none] = "branch.valid || branch.untouched" >Please select a branch for the new post.</small>
+    </div>
+
+    <button [disabled] = "newPostForm.form.invalid " type="submit" class="btn btn-primary">Submit</button>
+
+</form>
+ 
+<p> test here
+  {{newPostForm.value | json }}</p>
