@@ -1,12 +1,21 @@
 export class Post {
+    id: string | Int32Array;
+    postOwner_id: string;
+    title: string;
+    postContent: object;
+    branch: string;
+    lastEdited: number;
+    tags: [string];
+    comment: [number];
+
     constructor(
-        id: Number,
-        postOwner_id: Number,
-        title: String,
-        postContent: Object,
-        branch: String,
-        lastEdited: Date,
-        tags: [String],
+        id: string | Int32Array,
+        postOwner_id: string,
+        title: string,
+        postContent: object,
+        branch: string,
+        lastEdited: number,
+        tags: [string],
         comment: [number],
     ) {}
 }

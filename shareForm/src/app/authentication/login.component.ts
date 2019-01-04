@@ -25,6 +25,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
               private _log: LoginService,
               private _tokenserver: TokenService) { }
   ngOnInit() {
+    // 什么user id 乱起名字
     const user_id = this._tokenserver.loggedIn();
 
     if (user_id) {
@@ -70,10 +71,14 @@ export class LoginComponent implements OnInit, AfterViewInit {
             // if not 'remember me'
             if (this.is_remember_me) {
               localStorage.setItem('refreshToken', res.data.refreshToken);
+              localStorage.setItem('user_id', this.loginInRequestData.email);
               sessionStorage.removeItem('refreshToken'); // in case
+              sessionStorage.removeItem('ruser_id');
             } else {
               sessionStorage.setItem('refreshToken', res.data.refreshToken);
+              sessionStorage.setItem('user_id', this.loginInRequestData.email);
               localStorage.removeItem('refreshToken'); // in case
+              localStorage.removeItem('user_id'); // in case
             }
             sessionStorage.setItem('accessToken', res.data.accessToken);
             this.router.navigate(['/']);
