@@ -2,15 +2,14 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var postSchema = new Schema({
-  id: Number,
-  postOwner_id: Number,
-  parent_post: Number,
-  child_post: Number,
-  postContent: Map,
+  id: String | Int32Array,
+  postOwnerId: String,
   title: String,
+  postContent: Object,
   branch: String,
-  lastEdited: Date,
+  lastEdited: Number,
   tags: [String],
+  comment: [String],
 
 });
 

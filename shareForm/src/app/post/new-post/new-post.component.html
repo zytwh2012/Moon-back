@@ -12,7 +12,7 @@
     <div class="form-group">
       <quill-editor   name = "content"  
       required #content="ngModel" [class.is-invalid]= "content.invalid && content.touched"
-      [(ngModel)] = "postModel.content" ></quill-editor>
+      [(ngModel)] = "postModel.postContent" ></quill-editor>
       <small class = "text-danger" [class.d-none] = "content.valid || content.untouched">Content is required for a new post.</small>
     </div>
 
