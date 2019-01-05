@@ -16,13 +16,18 @@ export class PostComponent implements OnInit , AfterViewInit {
   private _is_pullable = true;
   private _current_path = '/';
   private _logedin;
-  private _user_name = 'test';
+  public user_id = '';
 
   constructor(private _postService: PostService,
               private _location: Location,
               private _router: Router,
               private _tokenService: TokenService) { }
   ngOnInit() {
+    // get user id
+    this.user_id = localStorage.getItem('user_id');
+    if (this.user_id === '') {
+      this.user_id = sessionStorage.getItem('user_id');
+    }
     this._current_path = this._router.url.toString();
     this._current_path = this._current_path.substr(1, this._current_path.length );
     this._postService.getPost(this._current_path, this.posts.length)
