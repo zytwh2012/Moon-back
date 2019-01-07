@@ -3,6 +3,7 @@ import {Post} from '../post';
 import {Md5} from 'ts-md5/dist/md5';
 import {TokenService} from '../../authentication/token.service';
 import {NewPostService} from './new-post.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-new-post',
@@ -13,7 +14,7 @@ import {NewPostService} from './new-post.service';
 export class NewPostComponent implements OnInit {
   public content = '';
   public user_id = '';
-  constructor(private _tokenserver: TokenService, private _post:  NewPostService) { }
+  constructor(private _tokenserver: TokenService, private _post:  NewPostService, private router: Router) { }
   postModel = new Post(null, null, null, null, null, null, null, null);
 
   ngOnInit() {
@@ -40,5 +41,7 @@ export class NewPostComponent implements OnInit {
           console.log(error);
         }
       );
+
+      this.router.navigate(['/']);
   }
 }
