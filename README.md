@@ -11,9 +11,11 @@
 
 1.2 12/02
 1. impement post-detailpost detail
-
 2.user post function(implemented)
-(Guest view non hidden only
-User view(everything) and post
-Admin view and delete)
+3.(Guest view non hidden onlyUser view(everything) and postAdmin view and delete)
+
+01-07 
+1 permission 
+
+
 
