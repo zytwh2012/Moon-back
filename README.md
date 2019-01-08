@@ -8,10 +8,11 @@
 5,discuess post archtecture
 7,post border hover(fixed zytwh2012)
 
+
 1.2 12/02
 1. impement post-detailpost detail
 
-2.user post function
+2.user post function(implemented)
 (Guest view non hidden only
 User view(everything) and post
 Admin view and delete)
