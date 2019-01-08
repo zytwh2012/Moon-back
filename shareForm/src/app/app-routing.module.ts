@@ -4,6 +4,7 @@ import { LoginComponent } from './authentication/login.component';
 import { PostComponent } from './post/post.component';
 import { LogoutComponent } from './authentication/logout.component';
 import { NewPostComponent } from './post/new-post/new-post.component';
+import { PostDetailComponent } from './post/post-detail/post-detail.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent},
@@ -13,7 +14,8 @@ const routes: Routes = [
   { path: 'game', component: PostComponent},
   { path: 'novel', component: PostComponent},
   { path: 'submit', component: NewPostComponent},
-  { path: '', component: PostComponent}
+  { path: '', component: PostComponent},
+  { path: 'p/:id',  component: PostDetailComponent}
 ];
 
 

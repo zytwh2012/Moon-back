@@ -22,6 +22,7 @@ import { TokenService } from './authentication/token.service';
 import { LogoutComponent } from './authentication/logout.component';
 import { NewPostComponent } from './post/new-post/new-post.component';
 import { QuillModule } from 'ngx-quill';
+import { PostDetailComponent } from './post/post-detail/post-detail.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { QuillModule } from 'ngx-quill';
     PostComponent,
     LoginComponent,
     LogoutComponent,
-    NewPostComponent
+    NewPostComponent,
+    PostDetailComponent
   ],
   imports: [
     BrowserModule,
