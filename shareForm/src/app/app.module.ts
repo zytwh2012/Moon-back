@@ -20,13 +20,16 @@ import { RegistrareService} from './authentication/registrate.service';
 import { LoginService } from './authentication/login.service';
 import { TokenService } from './authentication/token.service';
 import { LogoutComponent } from './authentication/logout.component';
+import { NewPostComponent } from './post/new-post/new-post.component';
+import { QuillModule } from 'ngx-quill';
 
 @NgModule({
   declarations: [
     AppComponent,
     PostComponent,
     LoginComponent,
-    LogoutComponent
+    LogoutComponent,
+    NewPostComponent
   ],
   imports: [
     BrowserModule,
@@ -39,7 +42,8 @@ import { LogoutComponent } from './authentication/logout.component';
     MatToolbarModule,
     NgbModule.forRoot(),
     FormsModule,
-    MyMaterialModule
+    MyMaterialModule,
+    QuillModule
   ],
   providers: [PostService, RegistrareService, LoginService,
     {

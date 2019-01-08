@@ -40,6 +40,19 @@
     transition: 0.5s;
 }
 
+:host ::ng-deep .post_content{
+    height: 100%; 
+    width: calc(100% - 70px);
+    overflow: auto;
+
+}
+
+/* .post post_content{
+    width: calc(100% - 70px);
+    height: calc(100% - 70px);
+
+} */
+
 .post :hover{
     border: 1px solid black
 }

@@ -3,6 +3,8 @@ import { Routes, RouterModule } from '@angular/router';
 import { LoginComponent } from './authentication/login.component';
 import { PostComponent } from './post/post.component';
 import { LogoutComponent } from './authentication/logout.component';
+import { NewPostComponent } from './post/new-post/new-post.component';
+
 const routes: Routes = [
   { path: 'login', component: LoginComponent},
   { path: 'signup', component: LoginComponent},
@@ -10,6 +12,7 @@ const routes: Routes = [
   { path: 'animate', component: PostComponent},
   { path: 'game', component: PostComponent},
   { path: 'novel', component: PostComponent},
+  { path: 'submit', component: NewPostComponent},
   { path: '', component: PostComponent}
 ];
 
