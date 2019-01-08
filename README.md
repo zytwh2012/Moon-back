@@ -1,8 +1,8 @@
 # Share-form
 1.1  11/12
 
-1,Remember me
-2,Token server retry failed request
+1,Remember me(completed)
+2,Token server retry failed request(completed)
 3,Fix post blue backgroud (fixed zytwh2012) 
 4,Post size consistent (fixed zytwh2012) 
 5,discuess post archtecture
