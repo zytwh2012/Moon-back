@@ -111,9 +111,8 @@ router.post('/login', (req, res) => {
 
 // 
 router.post('/search/post', verifyToken, (req, res) => {
-    let postId = req.postId
-    console.log(postId)
-    Post.findOne({id: postId})
+    console.log(req.body)
+    Post.findOne(req.body)
         .exec( (error, post) =>{
             if (error) {
                 console.log(error,'error')    

@@ -19,7 +19,7 @@ export class PostDetailService {
 
 
   getPostById(postId): Observable<Post[]> {
-    const postIdJson = {postId: postId};
+    const postIdJson = {id: postId};
     return this.http.post<Post[]>(this.postUrl, postIdJson)
                     .pipe(
                       tap( post => {
