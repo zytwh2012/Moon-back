@@ -109,6 +109,19 @@ router.post('/login', (req, res) => {
     })
 })
 
+// 
+router.post('/search/post', verifyToken, (req, res) => {
+    let postId = req.postId
+    console.log(postId)
+    Post.findOne({id: postId})
+        .exec( (error, post) =>{
+            if (error) {
+                console.log(error,'error')    
+            }else {
+            }
+            return res.status(200).send(post)
+        })
+})
 
 // feed
 router.post('/feed', verifyToken, (req, res) =>{
@@ -122,7 +135,7 @@ router.post('/feed', verifyToken, (req, res) =>{
             .skip(count)
             .exec((error, post) => {
                 if (error) {
-                console.log(err,'error')    
+                console.log(error,'error')    
                 }else {
                 }
                 return res.status(200).send(post)

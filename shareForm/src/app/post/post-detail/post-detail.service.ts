@@ -13,14 +13,14 @@ import { TokenService } from '../../authentication/token.service';
 
 export class PostDetailService {
 
-  private _post_url = 'http://localhost:3000/api/feed';
+  private postUrl = 'http://localhost:3000/api/search/post';
 
   constructor(private http: HttpClient, private _auth: TokenService) { }
 
 
   getPostById(postId): Observable<Post[]> {
-    const postIdJson = {id: postId, count: 1};
-    return this.http.post<Post[]>(this._post_url, postIdJson)
+    const postIdJson = {postId: postId};
+    return this.http.post<Post[]>(this.postUrl, postIdJson)
                     .pipe(
                       tap( post => {
                         return post; // only fetch root-post

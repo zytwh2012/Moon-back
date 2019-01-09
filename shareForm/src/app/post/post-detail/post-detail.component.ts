@@ -26,7 +26,7 @@ export class PostDetailComponent implements OnInit {
     // get post detail json information from service
     this.postDetailService.getPostById(this.postId).subscribe(
       data => {
-        console.log(data,'heello');
+        console.log(data, 'heello');
         if (data) {
           this.post = this.post;
           console.log(this.post);
