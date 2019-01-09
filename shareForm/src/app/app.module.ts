@@ -23,6 +23,7 @@ import { LogoutComponent } from './authentication/logout.component';
 import { NewPostComponent } from './post/new-post/new-post.component';
 import { QuillModule } from 'ngx-quill';
 import { PostDetailComponent } from './post/post-detail/post-detail.component';
+import { PostDetailService } from './post/post-detail/post-detail.service';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,7 @@ import { PostDetailComponent } from './post/post-detail/post-detail.component';
     LoginComponent,
     LogoutComponent,
     NewPostComponent,
-    PostDetailComponent
+    PostDetailComponent,
   ],
   imports: [
     BrowserModule,
@@ -47,7 +48,7 @@ import { PostDetailComponent } from './post/post-detail/post-detail.component';
     MyMaterialModule,
     QuillModule
   ],
-  providers: [PostService, RegistrareService, LoginService,
+  providers: [PostService, RegistrareService, LoginService, PostDetailService,
     {
     provide: HTTP_INTERCEPTORS,
     useClass: TokenService,
