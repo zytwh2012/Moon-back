@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { PostDetailService } from './post-detail.service';
+import { post } from 'selenium-webdriver/http';
+import { stringify } from '@angular/compiler/src/util';
 
 
 @Component({
@@ -9,10 +11,10 @@ import { PostDetailService } from './post-detail.service';
   templateUrl: './post-detail.component.html',
   styleUrls: ['./post-detail.component.css']
 })
-export class PostDetailComponent implements OnInit {
+export class PostDetailComponent implements OnInit, AfterViewInit {
 
   public postId: String;
-  public post: String;
+  public post: any;
   // isPullable is to tack if more comments exits
   private isPullable: Boolean;
 
@@ -26,9 +28,8 @@ export class PostDetailComponent implements OnInit {
     // get post detail json information from service
     this.postDetailService.getPostById(this.postId).subscribe(
       data => {
-        console.log(data, 'heello');
         if (data) {
-          this.post = this.post;
+          this.post = data;
           console.log(this.post);
         }
       },
@@ -38,7 +39,11 @@ export class PostDetailComponent implements OnInit {
         this.router.navigate(['404']);
       }
     );
-    // present post detail
+    console.log(this.post);
   }
-
+  ngAfterViewInit() {
+    // present post-detail
+    console.log(this.post);
+    document.getElementsByTagName('p').item(0).innerText = JSON.stringify(this.post);
+  }
 }
