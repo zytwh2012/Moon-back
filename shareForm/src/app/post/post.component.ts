@@ -33,7 +33,6 @@ export class PostComponent implements OnInit , AfterViewInit {
     this._postService.getPost(this._current_path, this.posts.length)
     .subscribe(data => this.posts = data, error => console.log(error));
     this._logedin = this._tokenService.loggedIn();
-    console.log(this._logedin);
   }
 
   ngAfterViewInit() {

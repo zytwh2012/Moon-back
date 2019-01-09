@@ -30,20 +30,19 @@ export class PostDetailComponent implements OnInit, AfterViewInit {
       data => {
         if (data) {
           this.post = data;
-          console.log(this.post);
+        } else{
+          // unable to find post, redirect to 404
+          this.router.navigate(['404']);
         }
       },
       error => {
         console.log(error);
-        // unable to find post, redirect to 404
-        this.router.navigate(['404']);
       }
     );
-    console.log(this.post);
   }
   ngAfterViewInit() {
     // present post-detail
-    console.log(this.post);
-    document.getElementsByTagName('p').item(0).innerText = JSON.stringify(this.post);
+    // console.log(this.post);
+    // document.getElementsByTagName('p').item(0).innerText = JSON.stringify(this.post);
   }
 }

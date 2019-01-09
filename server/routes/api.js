@@ -109,9 +109,9 @@ router.post('/login', (req, res) => {
     })
 })
 
-// 
+// search and return post by id
+// req.body format example: {"id": "fbdf6d02d99fc261be410adac1e60396"}
 router.post('/search/post', verifyToken, (req, res) => {
-    console.log(req.body)
     Post.findOne(req.body)
         .exec( (error, post) =>{
             if (error) {
