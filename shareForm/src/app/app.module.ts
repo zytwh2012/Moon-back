@@ -22,6 +22,8 @@ import { TokenService } from './authentication/token.service';
 import { LogoutComponent } from './authentication/logout.component';
 import { NewPostComponent } from './post/new-post/new-post.component';
 import { QuillModule } from 'ngx-quill';
+import { PostDetailComponent } from './post/post-detail/post-detail.component';
+import { PostDetailService } from './post/post-detail/post-detail.service';
 
 @NgModule({
   declarations: [
@@ -29,7 +31,8 @@ import { QuillModule } from 'ngx-quill';
     PostComponent,
     LoginComponent,
     LogoutComponent,
-    NewPostComponent
+    NewPostComponent,
+    PostDetailComponent,
   ],
   imports: [
     BrowserModule,
@@ -45,7 +48,7 @@ import { QuillModule } from 'ngx-quill';
     MyMaterialModule,
     QuillModule
   ],
-  providers: [PostService, RegistrareService, LoginService,
+  providers: [PostService, RegistrareService, LoginService, PostDetailService,
     {
     provide: HTTP_INTERCEPTORS,
     useClass: TokenService,
