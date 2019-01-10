@@ -13,32 +13,32 @@ import { Router } from '@angular/router';
 
 export class NewPostComponent implements OnInit {
   public content = '';
-  public user_id = '';
-  constructor(private _tokenserver: TokenService, private _post:  NewPostService, private router: Router) { }
+  public userId = '';
+  constructor(private tokenServer: TokenService, private newPostService: NewPostService, private router: Router) { }
   postModel = new Post(null, null, null, null, null, null, null, null);
 
   ngOnInit() {
     // get user id
-    this.user_id = localStorage.getItem('user_id');
-    if (this.user_id === '') {
-      this.user_id = sessionStorage.getItem('user_id');
+    this.userId = localStorage.getItem('userId');
+    if (this.userId === '') {
+      this.userId = sessionStorage.getItem('userId');
     }
   }
 
   onSubmit() {
     const timestamp: number = Date.now() / 1000;
-    this.postModel.postOwnerId = this.user_id;
+    this.postModel.postOwnerId = this.userId;
     this.postModel.lastEdited = timestamp;
     this.postModel.id = Md5.hashStr('' + this.postModel.postOwnerId + timestamp);
     console.log(this.postModel);
 
-    this._post.newPostRequest(this.postModel)
+    this.newPostService.newPostRequest(this.postModel)
       .subscribe(
         res => {
           console.log(res);
         },
         error => {
-          console.log(error);
+          console.log(error, 'onSubmit() error');
         }
       );
 

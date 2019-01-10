@@ -129,7 +129,7 @@ router.post('/feed', verifyToken, (req, res) =>{
     let count = pullRequest.count;
     if (branchReq == ''){
         Post.find()
-            .sort({'last_edited': -1})
+            .sort({'lastEdited': -1})
             .limit(10)
             .skip(count)
             .exec((error, post) => {
@@ -141,7 +141,7 @@ router.post('/feed', verifyToken, (req, res) =>{
             });
     }else{
         Post.find({branch: branchReq})
-            .sort({'last_edited': -1})
+            .sort({'lastEdited': -1})
             .limit(10)
             .skip(count)
             .exec((error, post) => {

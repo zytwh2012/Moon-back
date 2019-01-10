@@ -1,5 +1,5 @@
 
-.post_list {
+.postList {
     grid-area: 1/1/ 2/2;
   }
 
@@ -7,20 +7,21 @@
     grid-area: 1/2/ 2/3;
   }
 
-.post_container {
+.postContainer {
     display: grid  ;
     grid-template-columns: 5fr 2fr; 
     grid-template-rows: auto auto;
   }
 
-.auth_card {
+.authCard {
     position: sticky;
     position: -webkit-sticky; /* For macOS/iOS Safari */
     top: 8%; 
     z-index: 1000; /* Ensure that your app's content doesn't overlap the toolbar */
     padding: 1%；
 }
-.post_description {
+
+.postDescription {
     color : green /* Temporary need to modify after */
 }
 .posts mat-list-item{
@@ -40,18 +41,14 @@
     transition: 0.5s;
 }
 
-:host ::ng-deep .post_content{
+:host ::ng-deep .postContent{
     height: 100%; 
     width: calc(100% - 70px);
     overflow: auto;
 
 }
 
-/* .post post_content{
-    width: calc(100% - 70px);
-    height: calc(100% - 70px);
 
-} */
 
 .post :hover{
     border: 1px solid black

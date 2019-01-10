@@ -1,5 +1,5 @@
-<div class = 'post_container'>
-      <div  class = "post_list">
+<div class = 'postContainer'>
+      <div  class = "postList">
         <mat-list class ="posts">
           <mat-list-item *ngFor="let post of posts" class ='post'>
               <mat-card >
@@ -10,7 +10,7 @@
                 </mat-card-header>
 
                   <mat-card-content>
-                    <div class = "post_content" [innerHTML]="post.postContent"></div>
+                    <div class = "postContent" [innerHTML]="post.postContent"></div>
                   </mat-card-content>
                   <mat-card-actions>
                       <!-- <mat-chip-list>
@@ -23,22 +23,22 @@
       </div>
 
 <div class = 'sidebar'>
-  <mat-card class = 'auth_card'>
+  <mat-card class = 'authCard'>
     <mat-card-header>
         <mat-card-title>Share forum</mat-card-title>
-        <mat-card-subtitle *ngIf="!_logedin">Log in to find out more</mat-card-subtitle>
-        <mat-card-subtitle *ngIf="_logedin">Welcome {{user_id}} </mat-card-subtitle>
+        <mat-card-subtitle *ngIf="!loggedId">Log in to find out more</mat-card-subtitle>
+        <mat-card-subtitle *ngIf="loggedId">Welcome {{userId}} </mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
         小撸怡情，大撸伤身，强撸灰飞烟灭.
     </mat-card-content>
 
-    <mat-card-actions *ngIf="!_logedin"> 
+    <mat-card-actions *ngIf="!loggedId"> 
       <a mat-raised-button color = "accent" routerLink="/login" >Log in</a>
       <a mat-raised-button color = "accent"  routerLink="/signup" >Sign up</a>
     </mat-card-actions>
 
-    <mat-card-actions *ngIf="_logedin"> 
+    <mat-card-actions *ngIf="loggedId"> 
         <div><a mat-raised-button color = "primary" routerLink="/submit" >Create a new post</a></div>
         <div><a mat-raised-button color = "accent" routerLink="/logout" >Log out</a></div>
     </mat-card-actions>

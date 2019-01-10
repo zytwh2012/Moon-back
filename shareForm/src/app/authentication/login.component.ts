@@ -16,41 +16,41 @@ declare var $: any;
 export class LoginComponent implements OnInit, AfterViewInit {
   loginInRequestData = {email: '', password: ''};
   signUpRequestData = {email: '', password: ''};
-  private is_login_hidden = false ;
-  private is_remember_me = true;
+  private loginIsHidden = false ;
+  private rememberMeOn = true;
 
   constructor(private router: Router,
               private location: Location,
-              private _reg: RegistrareService,
-              private _log: LoginService,
-              private _tokenserver: TokenService) { }
+              private reg: RegistrareService,
+              private log: LoginService,
+              private tokenserver: TokenService) { }
   ngOnInit() {
-    // 什么user id 乱起名字
-    const user_id = this._tokenserver.loggedIn();
 
-    if (user_id) {
+    const loggedIn = this.tokenserver.loggedIn();
+
+    if (loggedIn) {
       this.router.navigate(['/']);
     } else {
       if (this.location.isCurrentPathEqualTo('/login')) {
-        this.is_login_hidden = false ;
+        this.loginIsHidden = false ;
       } else if (this.location.isCurrentPathEqualTo('/signup')) {
-        this.is_login_hidden = true ;
+        this.loginIsHidden = true ;
       } else {
         console.log('error login unknown url', this.router.url );
-        this.is_login_hidden = false ;
+        this.loginIsHidden = false ;
       }
     }
 
     // set fixed
-    const dancing_grils = document.getElementById('girls');
-    dancing_grils.style.position = 'fixed';
+    const dancingGrilsGif = document.getElementById('girls');
+    dancingGrilsGif.style.position = 'fixed';
   }
 
   ngAfterViewInit() {
     // jquery to avoid user typing space to username
     $('#inputUsername').on({
-      keydown: function(e) {
-        if (e.which === 32) {
+      keydown: function(error) {
+        if (error.which === 32) {
           return false;
         }
       },
@@ -62,42 +62,41 @@ export class LoginComponent implements OnInit, AfterViewInit {
   }
 
   logIn() {
-    this._log.loginInRequest(this.loginInRequestData)
+    this.log.loginInRequest(this.loginInRequestData)
       .subscribe(
         // todo: return a json user, check user's active status
         // is actived, save it to cookie and redirected to router
         res => {
           if (res) {
             // if not 'remember me'
-            if (this.is_remember_me) {
+            if (this.rememberMeOn) {
               localStorage.setItem('refreshToken', res.data.refreshToken);
-              localStorage.setItem('user_id', this.loginInRequestData.email);
+              localStorage.setItem('userId', this.loginInRequestData.email);
               sessionStorage.removeItem('refreshToken'); // in case
-              sessionStorage.removeItem('ruser_id');
+              sessionStorage.removeItem('userId');
             } else {
               sessionStorage.setItem('refreshToken', res.data.refreshToken);
-              sessionStorage.setItem('user_id', this.loginInRequestData.email);
+              sessionStorage.setItem('userId', this.loginInRequestData.email);
               localStorage.removeItem('refreshToken'); // in case
-              localStorage.removeItem('user_id'); // in case
+              localStorage.removeItem('userId'); // in case
             }
             sessionStorage.setItem('accessToken', res.data.accessToken);
             this.router.navigate(['/']);
           }
         },
-        error => console.log(error, 'here error')
+        error => console.log(error, 'logIn() error')
       );
   }
 
   signUp() {
-    this._reg.signUpRequest(this.signUpRequestData)
+    this.reg.signUpRequest(this.signUpRequestData)
       .subscribe(
         res => {
-          console.log(res);
-          this.is_login_hidden = false;
+          this.loginIsHidden = false;
         },
         error => {
-          console.log(error);
-          this.is_login_hidden = true;
+          console.log(error, 'signUp() error');
+          this.loginIsHidden = true;
         }
       );
   }
