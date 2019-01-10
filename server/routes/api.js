@@ -122,6 +122,20 @@ router.post('/search/post', verifyToken, (req, res) => {
         })
 })
 
+
+// search and return user by user's email
+// req.body format example: {"email": "test1@qq.com"}
+router.post('/search/user', verifyToken, (req, res) => {
+    User.findOne(req.body)
+        .exec( (error, user) =>{
+            if (error) {
+                console.log(error,'error')    
+            }else {
+            }
+            return res.status(200).send(user)
+        })
+})
+
 // feed
 router.post('/feed', verifyToken, (req, res) =>{
     let pullRequest = req.body;

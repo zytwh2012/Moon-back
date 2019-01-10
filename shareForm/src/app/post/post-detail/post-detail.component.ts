@@ -2,8 +2,6 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { PostDetailService } from './post-detail.service';
-import { post } from 'selenium-webdriver/http';
-import { stringify } from '@angular/compiler/src/util';
 
 
 @Component({
@@ -14,7 +12,7 @@ import { stringify } from '@angular/compiler/src/util';
 export class PostDetailComponent implements OnInit, AfterViewInit {
 
   public postId: String;
-  public post: any;
+  public post = null;
   // isPullable is to tack if more comments exits
   private isPullable: Boolean;
 
@@ -30,7 +28,7 @@ export class PostDetailComponent implements OnInit, AfterViewInit {
       data => {
         if (data) {
           this.post = data;
-        } else{
+        } else {
           // unable to find post, redirect to 404
           this.router.navigate(['404']);
         }
@@ -44,5 +42,8 @@ export class PostDetailComponent implements OnInit, AfterViewInit {
     // present post-detail
     // console.log(this.post);
     // document.getElementsByTagName('p').item(0).innerText = JSON.stringify(this.post);
+  }
+  redirectByBranch() {
+    this.router.navigate([this.post.branch.toLowerCase()]);
   }
 }
