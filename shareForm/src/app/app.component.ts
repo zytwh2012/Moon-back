@@ -1,6 +1,5 @@
 import { Component, AfterViewInit, OnInit } from '@angular/core';
-import { PostComponent } from './post/post.component';
-import { LoginComponent } from './authentication/login.component';
+
 
 
 @Component({
@@ -12,8 +11,8 @@ export class AppComponent implements OnInit, AfterViewInit {
   title = 'shareForum';
 
   ngOnInit() {
-    const dancing_grils = document.getElementById('girls');
-    dancing_grils.style.position = 'fixed';
+    const dancingGrilsGif = document.getElementById('girls');
+    dancingGrilsGif.style.position = 'fixed';
   }
 
   ngAfterViewInit() {

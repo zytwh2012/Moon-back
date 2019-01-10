@@ -1,10 +1,9 @@
 import { Injectable, Injector } from '@angular/core';
 import { HttpInterceptor, HttpHeaders, HttpRequest, HttpErrorResponse, HttpEvent, HttpResponse } from '@angular/common/http';
 import { HttpClient} from '@angular/common/http';
-import { tap , map, catchError, mergeMap} from 'rxjs/operators';
+import { map, catchError, mergeMap} from 'rxjs/operators';
 import { throwError, Observable, empty, from } from 'rxjs';
 import { Router } from '@angular/router';
-import { HttpInterceptorHandler } from '@angular/common/http/src/interceptor';
 import { Subject } from 'rxjs';
 
 
@@ -19,19 +18,12 @@ export class TokenService implements HttpInterceptor {
     this.storage.next(value);
   }
 
-  constructor(private injector: Injector,
-              private http: HttpClient,
-              private router: Router) {}
+  constructor(private http: HttpClient, private router: Router) {}
   intercept(req, next) {
-    const token_re = /token/gi;
-
-    if (req.url.search(token_re) === -1 ) {
-
+    const tokenResponse = /token/gi;
+    if (req.url.search(tokenResponse) === -1 ) {
       let tokenizedReq = req.clone(
-        {
-          headers: req.headers.set('Authorization', 'bearer ' + this.getToken())
-        }
-      );
+        {headers: req.headers.set('Authorization', 'bearer ' + this.getToken())});
       // get first try result
       return next.handle(tokenizedReq).pipe(
         map( res => {
@@ -104,8 +96,8 @@ export class TokenService implements HttpInterceptor {
 
   refreshToken() {
 
-    const _refreshUrl = 'http://localhost:3000/api/token';
+    const refreshUrl = 'http://localhost:3000/api/token';
 
-    return this.http.get<any>(_refreshUrl);
+    return this.http.get<any>(refreshUrl);
   }
 }

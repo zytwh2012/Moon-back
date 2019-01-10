@@ -1,5 +1,5 @@
 
-<div *ngIf="!is_login_hidden" class="text-center" id='login'>
+<div *ngIf="!loginIsHidden" class="text-center" id='login'>
   <form class="form-signin " ngNativeValidate>
     <img class="mb-4" src="../../assets/img/login/login_icon.png" alt="" width="72" height="72">
     <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
@@ -31,7 +31,7 @@
 </div>
 
 
-<div *ngIf="is_login_hidden" class="text-center" id='signup'>
+<div *ngIf="loginIsHidden" class="text-center" id='signup'>
   <form class="form-signin " ngNativeValidate>
     <img class="mb-4" src="../../assets/img/login/signup_icon.png" alt="" width="72" height="72">
     <h1 class="h3 mb-3 font-weight-normal">Please sign up</h1>
