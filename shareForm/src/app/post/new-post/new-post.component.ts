@@ -29,6 +29,7 @@ export class NewPostComponent implements OnInit {
     const timestamp: number = Date.now() / 1000;
     this.postModel.postOwnerId = this.userId;
     this.postModel.lastEdited = timestamp;
+    this.postModel.branch = this.postModel.branch.toLowerCase();
     this.postModel.id = Md5.hashStr('' + this.postModel.postOwnerId + timestamp);
     console.log(this.postModel);
 
