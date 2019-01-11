@@ -26,19 +26,19 @@
   <mat-card class = 'authCard'>
     <mat-card-header>
         <mat-card-title>Share forum</mat-card-title>
-        <mat-card-subtitle *ngIf="!loggedId">Log in to find out more</mat-card-subtitle>
-        <mat-card-subtitle *ngIf="loggedId">Welcome {{userId}} </mat-card-subtitle>
+        <mat-card-subtitle *ngIf="!loggedIn">Log in to find out more</mat-card-subtitle>
+        <mat-card-subtitle *ngIf="loggedIn">Welcome {{userId}} </mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
         小撸怡情，大撸伤身，强撸灰飞烟灭.
     </mat-card-content>
 
-    <mat-card-actions *ngIf="!loggedId"> 
+    <mat-card-actions *ngIf="!loggedIn"> 
       <a mat-raised-button color = "accent" routerLink="/login" >Log in</a>
       <a mat-raised-button color = "accent"  routerLink="/signup" >Sign up</a>
     </mat-card-actions>
 
-    <mat-card-actions *ngIf="loggedId"> 
+    <mat-card-actions *ngIf="loggedIn"> 
         <div><a mat-raised-button color = "primary" routerLink="/submit" >Create a new post</a></div>
         <div><a mat-raised-button color = "accent" routerLink="/logout" >Log out</a></div>
     </mat-card-actions>

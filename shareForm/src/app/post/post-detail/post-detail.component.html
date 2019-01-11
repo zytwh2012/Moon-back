@@ -13,7 +13,9 @@
       {{post.branch}}
     </mat-card-subtitle>
 
-    <mat-card-content>{{post.postContent}}</mat-card-content>
+    <mat-card-content >
+      <div [innerHTML]="post.postContent"></div>
+    </mat-card-content>
 
     <mat-card-actions>
         <button mat-button>reply</button>

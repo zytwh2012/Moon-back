@@ -27,7 +27,6 @@ export class PostComponent implements OnInit , AfterViewInit {
     this.currentAddress = this.currentAddress.substr(1, this.currentAddress.length );
     this.postService.getPost(this.currentAddress, this.posts.length)
     .subscribe(data => this.posts = data, error => console.log(error));
-
     this.loggedIn = this.tokenService.loggedIn();
     console.log(this.loggedIn);
   }
