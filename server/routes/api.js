@@ -109,6 +109,21 @@ router.post('/login', (req, res) => {
     })
 })
 
+  // add a comments
+  router.post('/post/comments', verifyToken,(req, res) => {
+    // let commentData = req.body;
+    // let post = new Post(postData);
+    
+    // post.save((error,postedPost) =>{
+    //     if(error){
+    //         console.log(error)
+    //     }else{
+    //         res.status(200).send(postedPost)
+    //     }
+    // })
+})
+
+
 // search and return post by id
 // req.body format example: {"id": "fbdf6d02d99fc261be410adac1e60396"}
 router.post('/search/post', verifyToken, (req, res) => {
