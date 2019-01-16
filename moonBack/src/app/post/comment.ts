@@ -8,7 +8,7 @@ export class Comment {
     tags: [string];
     children: [Comment];
     parent: [Comment|Post];
-    root: [Post];
+    root: Post;
 
     constructor(
         id: string | Int32Array,
@@ -17,7 +17,7 @@ export class Comment {
         lastEdited: number,
         tags: [string],
         children: [Comment],
-        parent: [Comment|Post],
+        parent: Comment|Post,
         root: [Post],
     ) {}
 }

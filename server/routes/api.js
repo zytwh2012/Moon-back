@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const mongoose = require('mongoose')
 const User = require('../models/user')
+const Comment = require('../models/comment')
 const Post = require('../models/post')
 const jwt = require('jsonwebtoken')
 
@@ -95,8 +96,8 @@ router.post('/login', (req, res) => {
     })
   })
 
-  // post
-  router.post('/post', verifyToken,(req, res) => {
+// post
+router.post('/post', verifyToken,(req, res) => {
     let postData = req.body;
     let post = new Post(postData);
     
@@ -109,19 +110,32 @@ router.post('/login', (req, res) => {
     })
 })
 
-  // add a comments
-  router.post('/post/comments', verifyToken,(req, res) => {
-    // let commentData = req.body;
-    // let post = new Post(postData);
+// add a comment
+router.post('/post/comment', verifyToken,(req, res) => {
+    let commentData = req.body;
+    let comment = new Comment(commentData);
     
-    // post.save((error,postedPost) =>{
-    //     if(error){
-    //         console.log(error)
-    //     }else{
-    //         res.status(200).send(postedPost)
-    //     }
-    // })
+    comment.save((error,commentData) =>{
+        if(error){
+            console.log(error)
+        }else{
+            res.status(200).send(commentData)
+        }
+    })
 })
+
+// search and return comments by id
+router.post('/search/comment', verifyToken, (req, res) => {
+    Comment.findOne(req.body)
+        .exec( (error, comment) =>{
+            if (error) {
+                console.log(error,'error')    
+            }else {
+            }
+            return res.status(200).send(comment)
+        })
+})
+
 
 
 // search and return post by id
