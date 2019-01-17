@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const mongoose = require('mongoose')
 const User = require('../models/user')
-const Comment = require('../models/comment')
+const pComment = require('../models/comment')
 const Post = require('../models/post')
 const jwt = require('jsonwebtoken')
 
@@ -19,7 +19,6 @@ mongoose.connect(db, { useNewUrlParser: true },error =>{
 function verifyToken(req, res, next) {
     // verify the Json Token 
     if(!req.headers.authorization) {
-        console.log("1")
         return res.status(401).send('Unauthorized request');
     }
     let token = req.headers.authorization.split(' ')[1];
@@ -110,29 +109,66 @@ router.post('/post', verifyToken,(req, res) => {
     })
 })
 
-// add a comment
-router.post('/post/comment', verifyToken,(req, res) => {
-    let commentData = req.body;
-    let comment = new Comment(commentData);
+router.delete('/posts/delete', verifyToken, (req, res) => {
+    let postId = req.body.id;
+    Post.deleteOne({id :postId})
+        .exec( (error, deletedPost) =>{
+            if (error) {
+                console.log(error,'error')   
+                return res.status(404).send() 
+            }else {
+                pComment.deleteMany({root : postId})  
+                .exec( (error, deletedComments) =>{
+                if (error) {
+                    console.log(error,'error')   
+                    return res.status(404).send() 
+                }else {
+                    return res.status(200).send(deletedComments)
+                }
+                })
+            }
+        })
+})
+
+
+
+// post
+router.put('/posts/update/:postId', verifyToken,(req, res) => {
+    let postData = req.body;
+    let post = new Post(postData);
     
-    comment.save((error,commentData) =>{
+    post.save((error,postedPost) =>{
         if(error){
             console.log(error)
         }else{
-            res.status(200).send(commentData)
+            res.status(200).send(postedPost)
         }
     })
 })
 
-// search and return comments by id
+// add a pcomment
+router.post('/posts/comment', verifyToken,(req, res) => {
+    let pcommentData = req.body;
+    let pcomment = new pComment(pcommentData);
+    
+    pcomment.save((error,pcommentData) =>{
+        if(error){
+            console.log(error)
+        }else{
+            res.status(200).send(pcommentData)
+        }
+    })
+})
+
+// search and return pcomments by id
 router.post('/search/comment', verifyToken, (req, res) => {
-    Comment.findOne(req.body)
-        .exec( (error, comment) =>{
+    pComment.findOne(req.body)
+        .exec( (error, pcomment) =>{
             if (error) {
                 console.log(error,'error')    
             }else {
+                return res.status(200).send(pcomment)
             }
-            return res.status(200).send(comment)
         })
 })
 
@@ -146,8 +182,9 @@ router.post('/search/post', verifyToken, (req, res) => {
             if (error) {
                 console.log(error,'error')    
             }else {
+                return res.status(200).send(post)
             }
-            return res.status(200).send(post)
+           
         })
 })
 
@@ -160,8 +197,8 @@ router.post('/search/user', verifyToken, (req, res) => {
             if (error) {
                 console.log(error,'error')    
             }else {
+                return res.status(200).send(user)
             }
-            return res.status(200).send(user)
         })
 })
 
