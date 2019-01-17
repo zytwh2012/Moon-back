@@ -10,7 +10,6 @@ var postSchema = new Schema({
   lastEdited: Number,
   tags: [String],
   comment: [String],
-
 });
 
 module.exports = mongoose.model('post',postSchema,'posts');
