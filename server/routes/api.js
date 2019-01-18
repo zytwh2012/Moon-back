@@ -36,65 +36,6 @@ function verifyToken(req, res, next) {
 }
 
 
-router.post('/register', (req, res) =>{
-
-    let userData = req.body;
-    let user = new User(userData);
-
-    let payload = {userid: user._id,
-                exp: Math.floor(Date.now().valueOf() / 1000) + (1209600)};
-
-    let token = jwt.sign(payload, 'secretKey');
-
-    user.token = token
-
-    user.save((error,registeredUser) =>{
-        if(error){
-            console.log(error);
-        }else{
-            console.log(registeredUser)             
-            res.status(200).send({"status" : 'successful'});
-        }
-    })
-})
-
-router.post('/login', (req, res) => {
-    let userData = req.body;
-    User.findOne({email: userData.email}, (err, user) => {
-      if (err) {
-        console.log(err);
-      } else {
-        if (!user) {
-          res.status(401).send('Invalid Email or Password')
-        } else 
-        if ( user.password !== userData.password) {
-          res.status(401).send('Invalid Email or  Password');
-        } else {
-            let payload = {userid: user._id,
-                        exp: Math.floor(Date.now().valueOf() / 1000) + (600)}
-            let accessToken = jwt.sign(payload, 'secretKey');
-
-    
-            let repayload = {userid: user._id,
-                exp: Math.floor(Date.now().valueOf() / 1000) + (1209600)};
-
-            let retoken = jwt.sign(repayload, 'secretKey');
-            user.token = retoken
-            refreshToken = user.token;
-            User.updateOne({_id: user._id },
-                        {'token': refreshToken},
-                        (err) => {
-                            if(err) throw err
-                        });
-
-            res.status(200).send({ "status" : 'successful',
-                                   "data" : {refreshToken, accessToken} 
-                                }); 
-        }
-      }
-    })
-  })
-
 // post
 router.post('/post', verifyToken,(req, res) => {
     let postData = req.body;
@@ -146,32 +87,6 @@ router.put('/posts/update/:postId', verifyToken,(req, res) => {
     })
 })
 
-// add a pcomment
-router.post('/posts/comment', verifyToken,(req, res) => {
-    let pcommentData = req.body;
-    let pcomment = new pComment(pcommentData);
-    
-    pcomment.save((error,pcommentData) =>{
-        if(error){
-            console.log(error)
-        }else{
-            res.status(200).send(pcommentData)
-        }
-    })
-})
-
-// search and return pcomments by id
-router.post('/search/comment', verifyToken, (req, res) => {
-    pComment.findOne(req.body)
-        .exec( (error, pcomment) =>{
-            if (error) {
-                console.log(error,'error')    
-            }else {
-                return res.status(200).send(pcomment)
-            }
-        })
-})
-
 
 
 // search and return post by id
@@ -189,18 +104,6 @@ router.post('/search/post', verifyToken, (req, res) => {
 })
 
 
-// search and return user by user's email
-// req.body format example: {"email": "test1@qq.com"}
-router.post('/search/user', verifyToken, (req, res) => {
-    User.findOne(req.body)
-        .exec( (error, user) =>{
-            if (error) {
-                console.log(error,'error')    
-            }else {
-                return res.status(200).send(user)
-            }
-        })
-})
 
 // feed
 router.post('/feed', verifyToken, (req, res) =>{
@@ -235,6 +138,8 @@ router.post('/feed', verifyToken, (req, res) =>{
 })
 
 
+/* token relative method */
+
 router.get('/token', verifyToken, (req, res) => {
     let payload = {userid: req.userId,
         exp: Math.floor(Date.now().valueOf() / 1000) + (600)}
@@ -242,5 +147,227 @@ router.get('/token', verifyToken, (req, res) => {
     return res.status(200).send({ "status" : 'successful', 
                                 "data" : {accessToken}})
 })
+
+
+
+
+/* following are user api method  */
+
+
+// search and return user by user's email
+// req.body format example: {"email": "test1@qq.com"}
+router.post('/user/search', verifyToken, (req, res) => {
+    User.findOne(req.body)
+        .exec( (error, user) =>{
+            if (error) {
+                console.log(error,'error')    
+            }else {
+                return res.status(200).send(user)
+            }
+        })
+})
+
+
+// create new user
+router.post('/register', (req, res) =>{
+
+    let userData = req.body;
+    let user = new User(userData);
+
+    let payload = {userid: user._id,
+                exp: Math.floor(Date.now().valueOf() / 1000) + (1209600)};
+
+    let token = jwt.sign(payload, 'secretKey');
+
+    user.token = token
+
+    user.save((error,registeredUser) =>{
+        if(error){
+            console.log(error);
+        }else{
+            console.log(registeredUser)             
+            res.status(200).send({"status" : 'successful'});
+        }
+    })
+})
+
+
+// login, validate user information
+
+router.post('/login', (req, res) => {
+    let userData = req.body;
+    User.findOne({email: userData.email}, (err, user) => {
+      if (err) {
+        console.log(err);
+      } else {
+        if (!user) {
+          res.status(401).send('Invalid Email or Password')
+        } else 
+        if ( user.password !== userData.password) {
+          res.status(401).send('Invalid Email or  Password');
+        } else {
+            let payload = {userid: user._id,
+                        exp: Math.floor(Date.now().valueOf() / 1000) + (600)}
+            let accessToken = jwt.sign(payload, 'secretKey');
+
+    
+            let repayload = {userid: user._id,
+                exp: Math.floor(Date.now().valueOf() / 1000) + (1209600)};
+
+            let retoken = jwt.sign(repayload, 'secretKey');
+            user.token = retoken
+            refreshToken = user.token;
+            User.updateOne({_id: user._id },
+                        {'token': refreshToken},
+                        (err) => {
+                            if(err) throw err
+                        });
+
+            res.status(200).send({ "status" : 'successful',
+                                   "data" : {refreshToken, accessToken} 
+                                }); 
+        }
+      }
+    })
+})
+
+/** following are comment api method */
+
+// add a pcomment
+router.post('/comment', verifyToken,(req, res) => {
+    let pcommentData = req.body;
+    let pcomment = new pComment(pcommentData);
+    
+    pcomment.save((error,pcommentData) =>{
+        if(error){
+            console.log(error)
+        }else{
+            res.status(200).send(pcommentData)
+        }
+    })
+})
+
+// add a pcomments, this is only for admin 
+router.post('/comments', verifyToken,(req, res) => {
+
+    let pcommentsData = req.body.commentsData;
+    pcommentsData.forEach(pcommentData => {
+        var comment = new pComment(pcommentData);
+
+        comment.save((error, ) =>{
+            if(error){
+                console.log(error)
+            } 
+        })
+    })
+    res.status(200).send({'status': 'successful'})
+})
+
+
+
+// search and return pcomment by id
+router.post('/comment/search', verifyToken, (req, res) => {
+    pComment.findOne(req.body)
+        .exec( (error, pcomment) =>{
+            if (error) {
+                console.log(error,'error')    
+            }else {
+                return res.status(200).send(pcomment)
+            }
+        })
+})
+
+
+function deepCommentDelete(comment) {
+    comment.children.forEach( child =>{
+        pComment.findOne({id: child}).exec(
+            (err, childcomment) =>{
+                if (childcomment) {
+                    deepCommentDelete(comment)
+                    pComment.deleteOne({id :childcomment.id})
+                    .exec( (err) =>{
+                        if (err) {
+                            console.log(err,'error')
+                        }
+                    })
+                }
+                if (err) {console.log(err)}
+            }
+        )
+    })  
+
+}
+
+
+
+// delete pcomment by id
+router.delete('/comment/delete', verifyToken, (req, res) => {
+    // when delete comments. its parent should update its children
+    let commentId = req.body.id;
+    // find parent
+    pComment.findOne({id:commentId}).exec(
+        (err, comment) => {
+            if (comment) {
+                deepCommentDelete(comment)
+                // if parent is Post
+                if (comment.parent == comment.root ) {
+                    Post.findOne({id:comment.parent}).exec(
+                        err, parent =>{
+                            if (parent) {
+                                Post.updateOne(
+                                    {id: parent.id},
+                                    {comment: parent.comment.filter(
+                                        function(value){
+                                            return value != comment.id;
+                                        }
+                                    )},
+                                    (err) => { if (err) { console.log(err)} }
+                                )
+                            }
+                            if (err) {
+                                console.log(err)
+                            }
+                        }
+                    )
+                } else {
+                    // parent is still comment
+                    pComment.findOne({id:comment.parent}).exec(
+                        (err, parent) =>{
+                            if (parent) {
+                                pComment.updateOne(
+                                    {id: parent.id},
+                                    {children: parent.children.filter(
+                                        function(value){
+                                            return value != comment.id;
+                                        }
+                                    )},
+                                    err => { if (err) { console.log(err)} }
+                                )
+                            }
+                            if (err) {console.log(err)}
+                        }
+                    )                   
+                }
+ 
+            // delete comment itself
+            pComment.deleteOne({id :commentId})
+                .exec( (err) =>{
+                    if (err) {
+                        console.log(err,'error')   
+                        return res.status(404).send() 
+                    }else {
+                        return res.status(200).send({'status': 'successful'}) 
+                    }
+                })
+            }
+        }
+    )
+})
+
+
+
+
+
+
 
 module.exports = router
