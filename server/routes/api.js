@@ -279,22 +279,21 @@ router.post('/comment/search', verifyToken, (req, res) => {
 
 
 function deepCommentDelete(comment) {
-    comment.children.forEach( child =>{
-        pComment.findOne({id: child}).exec(
-            (err, childcomment) =>{
-                if (childcomment) {
-                    deepCommentDelete(comment)
-                    pComment.deleteOne({id :childcomment.id})
-                    .exec( (err) =>{
-                        if (err) {
-                            console.log(err,'error')
-                        }
-                    })
-                }
-                if (err) {console.log(err)}
-            }
-        )
-    })  
+    comment.children.forEach( childId =>{
+
+       pComment.findOne({id: childId}, function(err, child){
+           if (err) {
+               console.log(err);
+           } else {
+                deepCommentDelete(child);
+                pComment.deleteOne({id: child.id}, function(err){
+                    if (err) {
+                        console.log(err)
+                    }
+                })
+           }
+       })
+    })
 
 }
 
