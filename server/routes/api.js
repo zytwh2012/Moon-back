@@ -132,16 +132,15 @@ router.delete('/posts/delete', verifyToken, (req, res) => {
 
 
 
-// post
-router.put('/posts/update/:postId', verifyToken,(req, res) => {
-    let postData = req.body;
-    let post = new Post(postData);
-    
-    post.save((error,postedPost) =>{
-        if(error){
-            console.log(error)
+// update
+router.put('/posts/update/:id', verifyToken,(req, res) => {
+    let query= req.body;
+    Post.findOneAndUpdate({id : req.param.id},query, function (err, doc) {
+         if(err){
+            console.log("11111")
+            console.log(err)
         }else{
-            res.status(200).send(postedPost)
+            return res.status(200).send(doc)
         }
     })
 })
@@ -155,7 +154,7 @@ router.post('/posts/comment', verifyToken,(req, res) => {
         if(error){
             console.log(error)
         }else{
-            res.status(200).send(pcommentData)
+            return res.status(200).send(pcommentData)
         }
     })
 })
