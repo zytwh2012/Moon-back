@@ -73,16 +73,29 @@ router.delete('/posts/delete', verifyToken, (req, res) => {
 
 
 
-// post
-router.put('/posts/update/:postId', verifyToken,(req, res) => {
-    let postData = req.body;
-    let post = new Post(postData);
+// update
+router.put('/posts/update/:id', verifyToken,(req, res) => {
+    let query= req.body;
+    Post.findOneAndUpdate({id : req.param.id},query, function (err, doc) {
+         if(err){
+            console.log("11111")
+            console.log(err)
+        }else{
+            return res.status(200).send(doc)
+        }
+    })
+})
+
+// add a pcomment
+router.post('/posts/comment', verifyToken,(req, res) => {
+    let pcommentData = req.body;
+    let pcomment = new pComment(pcommentData);
     
-    post.save((error,postedPost) =>{
+    pcomment.save((error,pcommentData) =>{
         if(error){
             console.log(error)
         }else{
-            res.status(200).send(postedPost)
+            return res.status(200).send(pcommentData)
         }
     })
 })

@@ -14,6 +14,8 @@ const routes: Routes = [
   { path: 'logout', component: LogoutComponent},
 
   { path: 'submit', component: NewPostComponent},
+  { path: 'p/:id/update',  component: NewPostComponent},
+
   { path: 'animate', component: PostComponent},
   { path: 'game', component: PostComponent},
   { path: 'novel', component: PostComponent},
