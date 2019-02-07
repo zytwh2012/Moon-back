@@ -2,13 +2,12 @@
       <div  class = "postList">
         <mat-list class ="posts">
           <mat-list-item *ngFor="let post of posts" class ='post'>
-              <mat-card >
+              <mat-card  routerLink="/p/{{post.id}}" >
                 <mat-card-header>
                     <mat-card-title routerLink="/p/{{post.id}}">{{post.title}}</mat-card-title>
-                    <mat-card-subtitle routerLink="/p/{{post.branch}}">{{post.branch}}</mat-card-subtitle>
+                    <mat-card-subtitle routerLink="/{{post.branch}}">{{post.branch}}</mat-card-subtitle>
                 </mat-card-header>
-
-                  <mat-card-content routerLink="/p/{{post.id}}">
+                  <mat-card-content >
                     <div class = "postContent" [innerHTML]="post.postContent"></div>
                   </mat-card-content>
                   <mat-card-actions>
