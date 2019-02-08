@@ -6,8 +6,7 @@ var commentSchema = new Schema({
     commentOwnerId: String,
     commentContent: String,
     lastEdited: Number,
-    tags: [String],
-    children: [String],
+    children: [commentSchema],
     parent: String,
     root: String,
 })

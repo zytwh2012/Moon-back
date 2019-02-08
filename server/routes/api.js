@@ -78,7 +78,6 @@ router.put('/posts/update/:id', verifyToken,(req, res) => {
     let query= req.body;
     Post.findOneAndUpdate({id : req.param.id},query, function (err, doc) {
          if(err){
-            console.log("11111")
             console.log(err)
         }else{
             return res.status(200).send(doc)
@@ -86,25 +85,10 @@ router.put('/posts/update/:id', verifyToken,(req, res) => {
     })
 })
 
-// add a pcomment
-router.post('/posts/comment', verifyToken,(req, res) => {
-    let pcommentData = req.body;
-    let pcomment = new pComment(pcommentData);
-    
-    pcomment.save((error,pcommentData) =>{
-        if(error){
-            console.log(error)
-        }else{
-            return res.status(200).send(pcommentData)
-        }
-    })
-})
-
-
 
 // search and return post by id
 // req.body format example: {"id": "fbdf6d02d99fc261be410adac1e60396"}
-router.post('/search/post', verifyToken, (req, res) => {
+router.post('/post/search', verifyToken, (req, res) => {
     Post.findOne(req.body)
         .exec( (error, post) =>{
             if (error) {
@@ -279,13 +263,25 @@ router.post('/comments', verifyToken,(req, res) => {
 
 
 // search and return pcomment by id
-router.post('/comment/search', verifyToken, (req, res) => {
-    pComment.findOne(req.body)
+router.get('/comment/search', verifyToken, (req, res) => {
+    // /comment/search?depth=1&id=1234555
+    let depth = req.query.depth
+    let commentId = req.query.id
+    if (depth == null) {
+        depth = 0
+    } 
+    if (commentId == null) {
+        return res.status(404)
+    }
+
+    // recursive find comments
+    pComment.findOne({id:commentId})
         .exec( (error, pcomment) =>{
             if (error) {
                 console.log(error,'error')    
             }else {
-                return res.status(200).send(pcomment)
+                result = searchComment(pcomment,0,depth)
+                return res.status(200).send(result)
             }
         })
 })
@@ -307,7 +303,34 @@ function deepCommentDelete(comment) {
            }
        })
     })
+}
 
+
+function searchComment(comment,currentDepth,maxDepth) {
+    // comment pComment object
+    // currentDepth int,  maxDepth int
+    var temp = {
+        id: comment.id,
+        commentOwnerId: comment.commentOwnerId,
+        commentContent: comment.commentContent,
+        lastEdited: comment.lastEdited,
+        parent: comment.parent,
+        root: comment.root,
+        children: []
+    }
+    if (currentDepth < maxDepth) {
+        comment.children.forEach( childId =>{
+            pComment.findOne({id: childId}, function(err, child){
+                if (err) {
+                    console.log(err);
+                } else {
+                    childObj = searchComment(child,currentDepth+1,maxDepth)
+                    temp.children.push(childObj);
+                }
+            }).exec
+        })
+    }
+    return temp
 }
 
 
