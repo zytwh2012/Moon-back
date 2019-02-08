@@ -24,6 +24,7 @@ import { NewPostComponent } from './post/new-post/new-post.component';
 import { QuillModule } from 'ngx-quill';
 import { PostDetailComponent } from './post/post-detail/post-detail.component';
 import { PostDetailService } from './post/post-detail/post-detail.service';
+import { CommentComponent } from './post/comment/comment.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { PostDetailService } from './post/post-detail/post-detail.service';
     LogoutComponent,
     NewPostComponent,
     PostDetailComponent,
+    CommentComponent,
   ],
   imports: [
     BrowserModule,

@@ -2,7 +2,8 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { PostDetailService } from './post-detail.service';
-
+import {Comment} from '../comment';
+import { post } from 'selenium-webdriver/http';
 
 @Component({
   selector: 'app-post-detail',
@@ -13,6 +14,9 @@ export class PostDetailComponent implements OnInit, AfterViewInit {
 
   public postId: String;
   public post = null;
+  public comments = Array<Comment>();
+  public isReply = false;
+  public replyContent = '';
   // isPullable is to tack if more comments exits
   private isPullable: Boolean;
 
@@ -40,10 +44,42 @@ export class PostDetailComponent implements OnInit, AfterViewInit {
   }
   ngAfterViewInit() {
     // present post-detail
-    // console.log(this.post);
-    // document.getElementsByTagName('p').item(0).innerText = JSON.stringify(this.post);
   }
   redirectByBranch() {
     this.router.navigate([this.post.branch.toLowerCase()]);
+  }
+  addPostComment(event, parentId) {
+    let userId = localStorage.getItem('userId');
+    if (userId === '') {
+      userId = sessionStorage.getItem('userId');
+    }
+    const newComment = {
+      root: this.postId,
+      commentOwnerId: userId,
+      commentContent: null,
+      lastEdited: Date.now(),
+      children: [],
+      parent: parentId
+    };
+    // let replyTextArea = document.createElement('textarea');
+    // event.target.appendChild();
+    let clickTarget = null;
+    if (event.target.tagName === 'SPAN') {
+      clickTarget = event.target.parentNode;
+    } else if (event.target.tagName === 'BUTTON') {
+      clickTarget = event.target;
+    }
+    if (clickTarget != null) {
+      // if click reply button
+      const clickTargetParent = clickTarget.parentNode;
+    }
+    newComment.lastEdited = Date.now();
+    // var postComment = new Comment(null, null, null, null, null, null, null, null);
+    // postComment.root = this.post;
+
+    // add post comment
+  }
+  submitComment(event, parentId) {
+    this.isReply = false;
   }
 }
