@@ -51,8 +51,8 @@ router.post('/post', verifyToken,(req, res) => {
 })
 
 router.delete('/posts/delete', verifyToken, (req, res) => {
-    let postId = req.body.id;
-    Post.deleteOne({id :postId})
+    let postId = req.body._id;
+    Post.findByIdAndDelete(postId)
         .exec( (error, deletedPost) =>{
             if (error) {
                 console.log(error,'error')   
@@ -71,12 +71,10 @@ router.delete('/posts/delete', verifyToken, (req, res) => {
         })
 })
 
-
-
 // update
 router.put('/posts/update/:id', verifyToken,(req, res) => {
     let query= req.body;
-    Post.findOneAndUpdate({id : req.param.id},query, function (err, doc) {
+    Post.findOneAndUpdate({_id : req.param.id},query, function (err, doc) {
          if(err){
             console.log(err)
         }else{
@@ -84,7 +82,6 @@ router.put('/posts/update/:id', verifyToken,(req, res) => {
         }
     })
 })
-
 
 // search and return post by id
 // req.body format example: {"id": "fbdf6d02d99fc261be410adac1e60396"}
@@ -138,7 +135,7 @@ router.post('/feed', verifyToken, (req, res) =>{
 /* token relative method */
 
 router.get('/token', verifyToken, (req, res) => {
-    let payload = {userid: req.userId,
+    let payload = {_id: req._id,
         exp: Math.floor(Date.now().valueOf() / 1000) + (600)}
     let accessToken = jwt.sign(payload, 'secretKey');
     return res.status(200).send({ "status" : 'successful', 
@@ -265,144 +262,143 @@ router.post('/comments', verifyToken,(req, res) => {
 // search and return pcomment by id
 router.get('/comment/search', verifyToken, (req, res) => {
     // /comment/search?depth=1&id=1234555
-    let depth = req.query.depth
-    let commentId = req.query.id
-    if (depth == null) {
-        depth = 0
-    } 
-    if (commentId == null) {
-        return res.status(404)
-    }
-
-    // recursive find comments
-    pComment.findOne({id:commentId})
-        .exec( (error, pcomment) =>{
-            if (error) {
-                console.log(error,'error')    
-            }else {
-                result = searchComment(pcomment,0,depth)
-                return res.status(200).send(result)
-            }
-        })
-})
-
-
-function deepCommentDelete(comment) {
-    comment.children.forEach( childId =>{
-
-       pComment.findOne({id: childId}, function(err, child){
-           if (err) {
-               console.log(err);
-           } else {
-                deepCommentDelete(child);
-                pComment.deleteOne({id: child.id}, function(err){
-                    if (err) {
-                        console.log(err)
-                    }
-                })
-           }
-       })
+    pComment
+    .findOne({ _id: req.query._id })
+    .populate('children')
+    .exec(function (err, comment) {
+      if (err) return handleError(err);
+      console.log(comment);
     })
-}
 
-
-function searchComment(comment,currentDepth,maxDepth) {
-    // comment pComment object
-    // currentDepth int,  maxDepth int
-    var temp = {
-        id: comment.id,
-        commentOwnerId: comment.commentOwnerId,
-        commentContent: comment.commentContent,
-        lastEdited: comment.lastEdited,
-        parent: comment.parent,
-        root: comment.root,
-        children: []
-    }
-    if (currentDepth < maxDepth) {
-        comment.children.forEach( childId =>{
-            pComment.findOne({id: childId}, function(err, child){
-                if (err) {
-                    console.log(err);
-                } else {
-                    childObj = searchComment(child,currentDepth+1,maxDepth)
-                    temp.children.push(childObj);
-                }
-            }).exec
-        })
-    }
-    return temp
-}
-
-
-
-// delete pcomment by id
-router.delete('/comment/delete', verifyToken, (req, res) => {
-    // when delete comments. its parent should update its children
-    let commentId = req.body.id;
-    // find parent
-    pComment.findOne({id:commentId}).exec(
-        (err, comment) => {
-            if (comment) {
-                deepCommentDelete(comment)
-                // if parent is Post
-                if (comment.parent == comment.root ) {
-                    Post.findOne({id:comment.parent}).exec(
-                        err, parent =>{
-                            if (parent) {
-                                Post.updateOne(
-                                    {id: parent.id},
-                                    {comment: parent.comment.filter(
-                                        function(value){
-                                            return value != comment.id;
-                                        }
-                                    )},
-                                    (err) => { if (err) { console.log(err)} }
-                                )
-                            }
-                            if (err) {
-                                console.log(err)
-                            }
-                        }
-                    )
-                } else {
-                    // parent is still comment
-                    pComment.findOne({id:comment.parent}).exec(
-                        (err, parent) =>{
-                            if (parent) {
-                                pComment.updateOne(
-                                    {id: parent.id},
-                                    {children: parent.children.filter(
-                                        function(value){
-                                            return value != comment.id;
-                                        }
-                                    )},
-                                    err => { if (err) { console.log(err)} }
-                                )
-                            }
-                            if (err) {console.log(err)}
-                        }
-                    )                   
-                }
- 
-            // delete comment itself
-            pComment.deleteOne({id :commentId})
-                .exec( (err) =>{
-                    if (err) {
-                        console.log(err,'error')   
-                        return res.status(404).send() 
-                    }else {
-                        return res.status(200).send({'status': 'successful'}) 
-                    }
-                })
-            }
-        }
-    )
+    // // recursive find comments
+    // pComment.findOne({id:commentId})
+    //     .exec( (error, pcomment) =>{
+    //         if (error) {
+    //             console.log(error,'error')    
+    //         }else {
+    //             result = searchComment(pcomment,0,depth)
+    //             return res.status(200).send(result)
+    //         }
+    //     })
 })
 
 
+// function deepCommentDelete(comment) {
+//     comment.children.forEach( childId =>{
+
+//        pComment.findOne({id: childId}, function(err, child){
+//            if (err) {
+//                console.log(err);
+//            } else {
+//                 deepCommentDelete(child);
+//                 pComment.deleteOne({id: child.id}, function(err){
+//                     if (err) {
+//                         console.log(err)
+//                     }
+//                 })
+//            }
+//        })
+//     })
+// }
+
+
+// function searchComment(comment,currentDepth,maxDepth) {
+//     // comment pComment object
+//     // currentDepth int,  maxDepth int
+//     var temp = {
+//         id: comment.id,
+//         commentOwnerId: comment.commentOwnerId,
+//         commentContent: comment.commentContent,
+//         lastEdited: comment.lastEdited,
+//         parent: comment.parent,
+//         root: comment.root,
+//         children: []
+//     }
+//     if (currentDepth < maxDepth) {
+//         comment.children.forEach( childId =>{
+//             pComment.findOne({id: childId}, function(err, child){
+//                 if (err) {
+//                     console.log(err);
+//                 } else {
+//                     childObj = searchComment(child,currentDepth+1,maxDepth)
+//                     temp.children.push(childObj);
+//                 }
+//             }).exec
+//         })
+//     }
+//     return temp
+// }
+
+
+
+// // delete pcomment by id
+// router.delete('/comment/delete', verifyToken, (req, res) => {
+//     // when delete comments. its parent should update its children
+//     let commentId = req.body.id;
+//     // find parent
+//     pComment.findOne({id:commentId}).exec(
+//         (err, comment) => {
+//             if (comment) {
+//                 deepCommentDelete(comment)
+//                 // if parent is Post
+//                 if (comment.parent == comment.root ) {
+//                     Post.findOne({id:comment.parent}).exec(
+//                         err, parent =>{
+//                             if (parent) {
+//                                 Post.updateOne(
+//                                     {id: parent.id},
+//                                     {comment: parent.comment.filter(
+//                                         function(value){
+//                                             return value != comment.id;
+//                                         }
+//                                     )},
+//                                     (err) => { if (err) { console.log(err)} }
+//                                 )
+//                             }
+//                             if (err) {
+//                                 console.log(err)
+//                             }
+//                         }
+//                     )
+//                 } else {
+//                     // parent is still comment
+//                     pComment.findOne({id:comment.parent}).exec(
+//                         (err, parent) =>{
+//                             if (parent) {
+//                                 pComment.updateOne(
+//                                     {id: parent.id},
+//                                     {children: parent.children.filter(
+//                                         function(value){
+//                                             return value != comment.id;
+//                                         }
+//                                     )},
+//                                     err => { if (err) { console.log(err)} }
+//                                 )
+//                             }
+//                             if (err) {console.log(err)}
+//                         }
+//                     )                   
+//                 }
+ 
+//             // delete comment itself
+//             pComment.deleteOne({id :commentId})
+//                 .exec( (err) =>{
+//                     if (err) {
+//                         console.log(err,'error')   
+//                         return res.status(404).send() 
+//                     }else {
+//                         return res.status(200).send({'status': 'successful'}) 
+//                     }
+//                 })
+//             }
+//         }
+//     )
+// })
 
 
 
 
 
-module.exports = router
+
+
+// module.exports = router
